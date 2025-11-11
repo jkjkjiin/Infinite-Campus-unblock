@@ -96,7 +96,7 @@ if (fileParam) {
     const xhr = new XMLHttpRequest();
     xhr.open(
       "POST",
-      "http://localhost:4000/uploadthis",
+      "https://included-touched-joey.ngrok-free.app/uploadthis",
       true
     );
     xhr.upload.onprogress = (e) => {
