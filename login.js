@@ -16,3 +16,8 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.5.0/firebas
         window.location.href = "InfinitePasswords.html";
       }
     });
+    window.logout = () => {
+            signOut(auth).then(() => {
+              window.location.href = "InfinitePasswords.html";
+            });
+          };
