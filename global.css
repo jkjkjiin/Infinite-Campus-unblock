@@ -197,6 +197,7 @@ html {
 }
 .logo {
     height:55px; 
+    width:792px;
     top:0;
     margin-top:2.5px;
     vertical-align:bottom; 
@@ -395,12 +396,12 @@ location {
     transition: transform 0.3s ease;
     z-index: 1000;
 }
-.settings-button svg {
+.settings-button img {
     width: 40px;
     height: 40px;
     transition: transform 0.4s ease;
 }
-.settings-button:hover svg {
+.settings-button:hover img {
     transform: rotate(180deg);
 }
 .settings-button.actives {
