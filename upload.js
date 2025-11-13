@@ -19,7 +19,7 @@ if (fileParam) {
   btn.onclick = () => {
   progressContainer.style.display = "block";
   progressBar.style.width = "0%";
-  fetch(`https://included-touched-joey.ngrok-free.app/files/${encodeURIComponent(fileParam)}?download=1`, {
+  fetch(`http://localhost:4000/files/${encodeURIComponent(fileParam)}?download=1`, {
     method: "GET",
     headers: {
       "ngrok-skip-browser-warning": "true"
@@ -96,7 +96,7 @@ if (fileParam) {
     const xhr = new XMLHttpRequest();
     xhr.open(
       "POST",
-      "https://included-touched-joey.ngrok-free.app/uploadthis",
+      "http://localhost:4000/uploadthis",
       true
     );
     xhr.upload.onprogress = (e) => {
