@@ -59,15 +59,13 @@
             <a class="button" href="InfiniteNotes.html">
                 Change Future Updates
             </a>
-            <div class="update-container">
-                <textarea class="button" style="width:25vw; height:5vh; font-size:20px;" id="newUpdate" rows="1" value=""placeholder="Write Here"></textarea>
-                <br>
-                <button class="button" onclick="addUpdate()">
-                    Add Update
-                </button>
-                <div id="updates">
-                </div>
-            </div>
+            <div id="newUpdateContainer">
+  <input id="newUpdate" placeholder="Add a new update..." />
+  <button onclick="addUpdate()">Add</button>
+</div>
+
+<div id="updates"></div>
+
             <script type="module" src="adminupdates.js">
             </script>
             <br>
