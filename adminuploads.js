@@ -88,7 +88,7 @@ async function fetchLogs() {
         const ul = document.createElement("ul");
         logs.uploadLogs.forEach(l => {
             const li = document.createElement("li");
-            li.textContent = `[${formatTime(l.timestamp)}] ${l.message}`;
+            li.textContent = `[${formatTime(l.ts)}] ${l.message}`;
             ul.appendChild(li);
         });
         uploadSection.appendChild(ul);
@@ -104,7 +104,7 @@ async function fetchLogs() {
         const ul = document.createElement("ul");
         logs.rateLimitLogs.forEach(l => {
             const li = document.createElement("li");
-            li.textContent = `[${formatTime(l.timestamp)}] ${l.message}`;
+            li.textContent = `[${formatTime(l.ts)}] ${l.message}`;
             ul.appendChild(li);
         });
         rateSection.appendChild(ul);
@@ -120,7 +120,7 @@ async function fetchLogs() {
         const ul = document.createElement("ul");
         logs.activeLinks.forEach(l => {
             const li = document.createElement("li");
-            li.textContent = `[${formatTime(l.timestamp)}] ${l.url}`;
+            li.textContent = `[${formatTime(l.ts)}] ${l.url}`;
             ul.appendChild(li);
         });
         linksSection.appendChild(ul);
