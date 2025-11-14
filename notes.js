@@ -1,20 +1,18 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
-import { getDatabase, ref, push, onValue, remove } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-database.js";
-import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-analytics.js";
-window.NTAPI = (s);
+import { getDatabase, ref, push, onValue, remove, get } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-database.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-auth.js";
 const firebaseConfig = {
-    apiKey: window.NTAPI,
-    authDomain: "website-updates-485ea.firebaseapp.com",
-    databaseURL: "https://website-updates-485ea-default-rtdb.firebaseio.com",
-    projectId: "website-updates-485ea",
-    storageBucket: "website-updates-485ea.firebasestorage.app",
-    messagingSenderId: "184900273791",
-    appId: "1:184900273791:web:5a28c7ac05587b2f79a14a",
-    measurementId: "G-VXNTBEKM3W"
+    apiKey: "AIzaSyCd3Yi81oZbRFgcdc98e8hTatdM4pftYRs",
+    authDomain: "infinitecampus-6e93c.firebaseapp.com",
+    databaseURL: "https://infinitecampus-6e93c-default-rtdb.firebaseio.com",
+    projectId: "infinitecampus-6e93c",
+    storageBucket: "infinitecampus-6e93c.firebasestorage.app",
+    messagingSenderId: "349851426947",
+    appId: "1:349851426947:web:14cc56fab543ca91373bb6"
 };
 const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
 const db = getDatabase(app);
+const auth = getAuth(app);
 const noteInput = document.getElementById('noteInput');
 const saveBtn = document.getElementById('saveBtn');
 const notesContainer = document.getElementById('notesContainer');
@@ -37,6 +35,24 @@ if (noteInput) {
         }
     });
 }
+let isOwner = false;
+onAuthStateChanged(auth, async (user) => {
+    if (!user) {
+        applyOwnerPermissions(false);
+        return;
+    }
+    const ownerRef = ref(db, `users/${user.uid}/profile/isOwner`);
+    const snap = await get(ownerRef);
+    isOwner = snap.exists() && snap.val() === true;
+    applyOwnerPermissions(isOwner);
+});
+function applyOwnerPermissions(owner) {
+    if (noteInput) noteInput.style.display = owner ? "block" : "none";
+    if (saveBtn) saveBtn.style.display = owner ? "inline-block" : "none";
+    document.querySelectorAll(".delete-btn").forEach(btn => {
+        btn.style.display = owner ? "inline-block" : "none";
+    });
+}
 onValue(ref(db, 'notes'), (snapshot) => {
     if (!notesContainer) return;
     notesContainer.innerHTML = '';
@@ -47,12 +63,14 @@ onValue(ref(db, 'notes'), (snapshot) => {
         div.className = 'note';
         div.innerHTML = `
             <div class="txt">${note.text}</div>
-            <button class="delete-btn" data-key="${key}">Delete</button>
+            <button class="delete-btn" data-key="${key}" style="display:none">Delete</button>
         `;
         notesContainer.appendChild(div);
     });
+    applyOwnerPermissions(isOwner);
     document.querySelectorAll('.delete-btn').forEach(button => {
         button.addEventListener('click', () => {
+            if (!isOwner) return;
             const key = button.getAttribute('data-key');
             remove(ref(db, 'notes/' + key));
         });
