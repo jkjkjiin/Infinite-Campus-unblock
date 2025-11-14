@@ -52,6 +52,9 @@ function applyOwnerPermissions(owner) {
     document.querySelectorAll(".delete-btn").forEach(btn => {
         btn.style.display = owner ? "inline-block" : "none";
     });
+    document.querySelectorAll(".edit-btn").forEach(btn => {
+        btn.style.display = owner ? "inline-block" : "none";
+    });
 }
 onValue(ref(db, 'notes'), (snapshot) => {
     if (!notesContainer) return;
@@ -62,7 +65,9 @@ onValue(ref(db, 'notes'), (snapshot) => {
         const div = document.createElement('div');
         div.className = 'note';
         div.innerHTML = `
-            <div class="txt">${note.text}</div>
+            <div class="txt" data-key="${key}">${note.text}</div>
+            <button class="edit-btn" data-key="${key}" style="display:none">Edit</button>
+            <button class="save-edit-btn" data-key="${key}" style="display:none">Save</button>
             <button class="delete-btn" data-key="${key}" style="display:none">Delete</button>
         `;
         notesContainer.appendChild(div);
@@ -73,6 +78,31 @@ onValue(ref(db, 'notes'), (snapshot) => {
             if (!isOwner) return;
             const key = button.getAttribute('data-key');
             remove(ref(db, 'notes/' + key));
+        });
+    });
+    document.querySelectorAll('.edit-btn').forEach(button => {
+        button.addEventListener('click', () => {
+            if (!isOwner) return;
+            const key = button.getAttribute('data-key');
+            const txtDiv = document.querySelector(`.txt[data-key="${key}"]`);
+            const saveBtn = document.querySelector(`.save-edit-btn[data-key="${key}"]`);
+            const currentText = txtDiv.innerText;
+            txtDiv.innerHTML = `<input type="text" class="edit-input" value="${currentText}">`;
+            saveBtn.style.display = "inline-block";
+        });
+    });
+    document.querySelectorAll('.save-edit-btn').forEach(button => {
+        button.addEventListener('click', () => {
+            if (!isOwner) return;
+            const key = button.getAttribute('data-key');
+            const txtDiv = document.querySelector(`.txt[data-key="${key}"]`);
+            const input = txtDiv.querySelector('.edit-input');
+            if (!input) return;
+            const newText = input.value.trim();
+            if (!newText) return;
+            update(ref(db, 'notes/' + key), { text: newText });
+            txtDiv.innerText = newText;
+            button.style.display = "none";
         });
     });
 });
