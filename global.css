@@ -197,8 +197,9 @@ html {
 }
 .logo {
     height:55px; 
-    width:792px;
+    margin-left:20%;
     top:0;
+    max-width:fit-content;
     margin-top:2.5px;
     vertical-align:bottom; 
     position:fixed; 

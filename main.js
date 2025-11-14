@@ -44,7 +44,7 @@ function showError(err) {
     errDiv.style.position = "fixed";
     errDiv.style.textAlign = "center";
     errDiv.style.fontWeight = "bold";
-    errDiv.style.maxWidth = "50%";
+    errDiv.style.maxWidth = "fit-content";
     errDiv.style.height = "20px";
     errDiv.style.top = "70";
     errDiv.style.justifySelf = "center";
@@ -65,7 +65,7 @@ function showSuccess(success) {
     successDiv.style.position = "fixed";
     successDiv.style.textAlign = "center";
     successDiv.style.fontWeight = "bold";
-    successDiv.style.maxWidth = "50%";
+    successDiv.style.maxWidth = "fit-content";
     successDiv.style.height = "20px";
     successDiv.style.top = "70";
     successDiv.style.justifySelf = "center";

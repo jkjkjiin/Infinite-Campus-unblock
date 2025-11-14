@@ -34,7 +34,7 @@ const headerHTML = `
         </div>
         <div id="location">
         </div>
-        <div style="margin-top:1.5vh;" id="weather-container">
+        <div style="margin-top:1.5vh; max-width:fit-content" id="weather-container">
             <div id="global-text">
                 <pre id="weather">
                 </pre>
