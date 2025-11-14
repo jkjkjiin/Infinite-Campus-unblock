@@ -8,7 +8,7 @@ function normalizeUrl(url) {
 }
 async function checkURLStatus(url) {
     const statusEl = document.getElementById('status');
-    statusEl.textContent = "Verifying...";
+    statusEl.textContent = "Verifying";
     statusEl.style.color = "white";
     url = normalizeUrl(url);
     try {

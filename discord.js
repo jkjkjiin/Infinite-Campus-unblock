@@ -31,16 +31,16 @@ async function sendMessage() {
             body: JSON.stringify({ content: fullMessage })
         });
         if (response.ok) {
-            status.textContent = "✅ Message Sent!";
+            status.textContent = "Message Sent!";
             status.style.color = "lightgreen";
             document.getElementById("name").value = "";
             document.getElementById("message").value = "";
         } else {
-            status.textContent = "ERR#7 ❌ Failed To Send Message.";
+            status.textContent = "ERR#7 Failed To Send Message.";
             status.style.color = "red";
         }
     } catch (error) {
-        status.textContent = "ERR#7 ⚠️ Error Sending Message.";
+        status.textContent = "ERR#7 Error Sending Message.";
         status.style.color = "orange";
     }
 }

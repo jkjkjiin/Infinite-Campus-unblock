@@ -13,10 +13,7 @@ function safeSetItem(key, value) {
         console.warn(`LocalStorage Unavailable For Key: ${key}`, err);
     }
 }
-const a = "TWZocGp3OTY=";
-const b = "WGp1d3M2NzY1Jg==";
-const c = "Tml0cml4";
-const d = "RGFkZHlOaXRyaXg2OQ==";
+const a = "https://included-touched-joey.ngrok-free.app";
 const e = "QWl6YVN5QWd6NjZYNW9RRzZKdnJKamlWRVd3VEtJNFRsZnhBNHF3";
 const f = "bXl5dXg/NDRpbnhodHdpM2h0cjRmdW40fGpnbXR0cHg0Njg9Pjs4NTY1Ojs6Pjc5OTw+OjQ2Pl16OHJQPk1qUHVLfV95alpxa2teTTdUS1JWOkc5XGtzXmd4bzdTaFBUVU5VdXA2clRYc11YMl5pSjpceVNfVnNJUA==";
 const g = "bXl5dXg/NDRpbnhodHdpM2h0cjRmdW40fGpnbXR0cHg0Njg9Pjg4OTg8Nzw1PD4+Nj03NzR3fEk1ZEtkVUdId3JsfEd2bm1RO2o2VTVHTnhWUmRMb3htdX5ZV1I2VGxca0Z3XnZ5OWRxZ0dQWDY1eFB8U1A9SDdLVg==";
@@ -27,10 +24,6 @@ const l = "SW5maW5pdGVTZWNyZXRQYWdlcw==";
 const m = "https://discord.com/api/guilds/1002698920809463808/widget.json";
 const n = "aHR0cHM6Ly9kaXNjb3JkLmNvbS9hcGkvd2ViaG9va3MvMTM4OTcwNzcwMDQ1OTUzNjUyNC9tMlBJRkwtdGdpd1dkX2ZyTWV4c1NXb001Z2ZNNE56TzFkeEYyQWRqQThvY18tckswbzFYRTBDWGlUS0VPcXFZaldabw==";
 const o = ["Dad", "Default Bot", "Infinite Campus", "Log Bot", "Music Bot"];
-const p = [
-    { username: "SGFja2VyNDE=", password: "U2Vwcm4xMjEwIQ==" },
-    { username: "Tml0cml4", password: "RGFkZHlOaXRyaXg2OQ==" }
-];
 const q = "aHR0cHM6Ly9kaXNjb3JkLmNvbS9hcGkvd2ViaG9va3MvMTQwMDE3NjUwMDc3ODQ2NzQ4OS9FTlhLTmE4TGZfYXN4bVR3VFlIbkdiT05PRWRva2hQZXVfeUE1UU9oQ2ZlaUpPbzBCbXkwWVRZNHB1UEt3TnlSbFZpMg==";
 const r = [
     { usr: "U0dGamEyVnlOREU9", psw: "VTJWd2NtNHhNakV3SVE9PQ==", KY: "YUdGamEyVnlOREU9"},

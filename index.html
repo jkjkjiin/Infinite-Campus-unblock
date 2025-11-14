@@ -1,6 +1,5 @@
 <html>
     <head>
-        <!-- Google tag (gtag.js) -->
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-7SV03ZXJ9R">
         </script>
         <script>
@@ -30,11 +29,11 @@
         </script>
         <script>
             if ("serviceWorker" in navigator) {
-                  window.addEventListener("load", () => {
+                window.addEventListener("load", () => {
                     navigator.serviceWorker.register("/sw.js")
-                      .then(reg => console.log("Service Worker registered:", reg))
-                      .catch(err => console.error("Service Worker registration failed:", err));
-                      });
+                    .then(reg => console.log("Service Worker Registered:", reg))
+                    .catch(err => console.error("Service Worker Registration Failed:", err));
+                });
             }
         </script>
         <style>

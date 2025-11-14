@@ -173,7 +173,6 @@ window.addEventListener('DOMContentLoaded', () => {
             alert('Panic Settings Cleared');
         });
     }
-
     document.addEventListener('keydown', (e) => {
         if (["INPUT", "TEXTAREA"].includes(document.activeElement.tagName)) return;
         if (panicKey && panicUrl && e.key === panicKey) {
