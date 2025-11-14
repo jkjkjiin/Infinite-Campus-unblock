@@ -13,7 +13,7 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 onAuthStateChanged(auth, (user) => {
     if (user) {
-        window.location.href = "InfiniteSecretPages.html";
+        window.location.href = "InfiniteAdmins.html";
     }
 });
 window.login = () => {
@@ -22,7 +22,7 @@ window.login = () => {
     const errorText = document.getElementById("errorText");
     signInWithEmailAndPassword(auth, email, password)
     .then(() => {
-      	window.location.href = "InfiniteSecretPages.html";
+      	window.location.href = "InfiniteAdmins.html";
     })
     .catch((error) => {
       	errorText.textContent = error.message;
