@@ -5,8 +5,7 @@ async function sendMessage() {
     const status = document.getElementById("status");
     const channelId = "1389334335114580229";
     if (!message) {
-        status.textContent = "ERR#8 Message Cannot Be empty!";
-        status.style.color = "orange";
+        showError("ERR#8 Message Cannot Be empty!");
         return;
     }
     const fullMessage = `**${name}**\n${message}`;
@@ -20,16 +19,13 @@ async function sendMessage() {
             })
         });
         if (response.ok) {
-            status.textContent = "Message Sent!";
-            status.style.color = "lightgreen";
+            showSuccess("Message Sent!");
             document.getElementById("name").value = "";
             document.getElementById("message").value = "";
         } else {
-            status.textContent = "ERR#7 Failed To Send Message.";
-            status.style.color = "red";
+            showError("ERR#7 Failed To Send Message.");
         }
     } catch (error) {
-        status.textContent = "ERR#7 Error Sending Message.";
-        status.style.color = "orange";
+        showError("ERR#7 Error Sending Message.");
     }
 }

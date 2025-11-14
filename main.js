@@ -14,6 +14,8 @@ function safeSetItem(key, value) {
     }
 }
 const a = "https://included-touched-joey.ngrok-free.app";
+const b = "https://www.infinitecampus.xyz";
+const c = "Infinite Campus";
 const j = `PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz48c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgc3R5bGU9IndpZHRoOjEwMHZ3ICFpbXBvcnRhbnQ7IGhlaWdodDoxMDB2aCAhaW1wb3J0YW50OyI+PHRpdGxlPkluZmluaXRlIENhbXB1czwvdGl0bGU+PGZvcmVpZ25PYmplY3QgeD0iMCIgeT0iMCIgc3R5bGU9IndpZHRoOjEwMHZ3ICFpbXBvcnRhbnQ7IGhlaWdodDoxMDB2aCAhaW1wb3J0YW50OyI+PGVtYmVkIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hodG1sIiBzcmM9IiR7dXJsfSIgdHlwZT0idGV4dC9wbGFpbiIgc3R5bGU9ImhlaWdodDoxMDB2aCAhaW1wb3J0YW50OyB3aWR0aDoxMDB2dyAhaW1wb3J0YW50OyIgLz48L2ZvcmVpZ25PYmplY3Q+PC9zdmc+Cg==`;
 const k = "PGh0bWwgbGFuZz0iZW4iPgo8aGVhZD4KPG1ldGEgY2hhcnNldD0iVVRGLTgiPgo8bWV0YSBuYW1lPSJ2aWV3cG9ydCIgY29udGVudD0id2lkdGg9ZGV2aWNlLXdpZHRoLCBpbml0aWFsLXNjYWxlPTEuMCI+Cjx0aXRsZT5JbmZpbml0ZSBDYW1wdXM8L3RpdGxlPgo8c3R5bGU+CmJvZHk6Oi13ZWJraXQtc2Nyb2xsYmFyIHsgZGlzcGxheTogbm9uZTsgfQpib2R5IHsgbWFyZ2luOjBweDsgfQo8L3N0eWxlPgo8L2hlYWQ+Cjxib2R5Pgo8aWZyYW1lIHN0eWxlPSJoZWlnaHQ6MTAwdmg7IHdpZHRoOjEwMHZ3OyIgc3JjPSJQVVRfVVJMX0hFUkUiPjwvaWZyYW1lPgo8L2JvZHk+CjwvaHRtbD4=";
 const m = "https://discord.com/api/guilds/1002698920809463808/widget.json";
@@ -30,6 +32,48 @@ console.log('%cC', `
     color: #8BC53F;
     background-color: #121212;
 `);
+function showError(err) {
+    const errDiv = document.createElement("div");
+    errDiv.textContent = err;
+    errDiv.style.background = "salmon";
+    errDiv.style.color = "red";
+    errDiv.style.border = "3px solid red";
+    errDiv.style.borderRadius = "5px";
+    errDiv.style.padding = "3px";
+    errDiv.style.cursor = "pointer";
+    errDiv.style.position = "fixed";
+    errDiv.style.textAlign = "center";
+    errDiv.style.fontWeight = "bold";
+    errDiv.style.maxWidth = "50%";
+    errDiv.style.height = "20px";
+    errDiv.style.top = "70";
+    errDiv.style.justifySelf = "center";
+    errDiv.addEventListener("click", () => {
+        errDiv.remove();
+    });
+    document.body.appendChild(errDiv);
+}
+function showSuccess(success) {
+    const successDiv = document.createElement("div");
+    successDiv.textContent = success;
+    successDiv.style.background = "paleGreen";
+    successDiv.style.color = "green";
+    successDiv.style.border = "3px solid green";
+    successDiv.style.borderRadius = "5px";
+    successDiv.style.padding = "3px";
+    successDiv.style.cursor = "pointer";
+    successDiv.style.position = "fixed";
+    successDiv.style.textAlign = "center";
+    successDiv.style.fontWeight = "bold";
+    successDiv.style.maxWidth = "50%";
+    successDiv.style.height = "20px";
+    successDiv.style.top = "70";
+    successDiv.style.justifySelf = "center";
+    successDiv.addEventListener("click", () => {
+        successDiv.remove();
+    });
+    document.body.appendChild(successDiv);
+}
 function padlet() { window.open("https://padlet.com/newsomr95/chat-room-br2tjbusbebezr2n"); }
 function converter() { window.open("https://spotidownloader.com/en"); }
 function puter() { window.open("https://puter.com"); }

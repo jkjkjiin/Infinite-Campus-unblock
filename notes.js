@@ -2,13 +2,13 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebas
 import { getDatabase, ref, push, onValue, remove, get, update } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-database.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-auth.js";
 const firebaseConfig = {
-    apiKey: "AIzaSyCd3Yi81oZbRFgcdc98e8hTatdM4pftYRs",
-    authDomain: "infinitecampus-6e93c.firebaseapp.com",
-    databaseURL: "https://infinitecampus-6e93c-default-rtdb.firebaseio.com",
-    projectId: "infinitecampus-6e93c",
-    storageBucket: "infinitecampus-6e93c.firebasestorage.app",
-    messagingSenderId: "349851426947",
-    appId: "1:349851426947:web:14cc56fab543ca91373bb6"
+  	apiKey: "AIzaSyCd3Yi81oZbRFgcdc98e8hTatdM4pftYRs",
+  	authDomain: "infinitecampus-6e93c.firebaseapp.com",
+  	databaseURL: "https://infinitecampus-6e93c-default-rtdb.firebaseio.com",
+  	projectId: "infinitecampus-6e93c",
+  	storageBucket: "infinitecampus-6e93c.firebasestorage.app",
+  	messagingSenderId: "349851426947",
+  	appId: "1:349851426947:web:14cc56fab543ca91373bb6"
 };
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);

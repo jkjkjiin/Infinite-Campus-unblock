@@ -57,7 +57,7 @@ if (fileParam) {
             progressBar.style.width = "100%";
         })
         .catch(err => {
-            alert("Download Failed: " + err.message);
+            showError("Download Failed: " + err.message);
         });
     };
 } else {
@@ -83,7 +83,7 @@ if (fileParam) {
         if (!file) return;
         fileNameDisplay.textContent = "Selected File: " + file.name;
         if (file.size > MAX_SIZE) {
-            alert("File Too Large! Maximum Allowed Size Is 500 MB.");
+            showError("File Too Large! Maximum Allowed Size Is 500 MB.");
             input.value = "";
             return;
         }
@@ -105,7 +105,7 @@ if (fileParam) {
                     const res = JSON.parse(xhr.responseText);
                     const urlParts = res.fileUrl.split("/");
                     const filename = urlParts[urlParts.length - 1];
-                    const link = `https://www.infinitecampus.xyz/InfiniteUploaders.html?file=${encodeURIComponent(filename)}`;
+                    const link = `${b}/InfiniteUploaders.html?file=${encodeURIComponent(filename)}`;
                     output.innerHTML = `
                         <center>
                             <p>Temporary Download Link (5 Mins):</p>
@@ -127,7 +127,7 @@ if (fileParam) {
             }
         };
         xhr.onerror = () => {
-            output.innerHTML = `<p style="color:red;">Upload Failed (Network Error)</p>`;
+            output.innerHTML = `<p class="r">Upload Failed (Network Error)</p>`;
         };
         xhr.send(formData);
     });
@@ -135,6 +135,6 @@ if (fileParam) {
         const link = document.getElementById("fileLink");
         link.select();
         document.execCommand("copy");
-        alert("Copied To Clipboard!");
+        showSuccess("Copied To Clipboard!");
     };
 }

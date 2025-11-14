@@ -405,7 +405,7 @@ els.fileInput.addEventListener('change', async (e) => {
     const allowed = Math.max(0, MAX_FILES - tracks.length);
     const toAdd = files.slice(0, allowed);
     if (toAdd.length < files.length) {
-        alert(`Only ${allowed} More File(s) Allowed (Max ${MAX_FILES}).`);
+        showError(`Only ${allowed} More File(s) Allowed (Max ${MAX_FILES}).`);
     }
     for (let i=0;i<toAdd.length;i++) {
         const f = toAdd[i];

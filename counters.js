@@ -11,7 +11,7 @@ function startCountdown() {
     const timeStr = document.getElementById("timeInput").value.trim();
     const parsedDate = parseDateTime(dateStr, timeStr, format);
     if (!parsedDate || isNaN(parsedDate.getTime())) {
-        alert("Err#2 Invalid Date Or Time.");
+        showError("Err#2 Invalid Date Or Time.");
         return;
     }
     localStorage.setItem("countdownTarget", parsedDate.getTime());

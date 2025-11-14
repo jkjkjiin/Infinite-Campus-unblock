@@ -180,7 +180,7 @@ document.body.addEventListener('click', e => {
         const messageId = btn.dataset.id;
         const emoji = btn.dataset.emoji;
         if(!discordEmojiRegex.test(emoji)){
-            alert('This Emoji Is Not Valid For Discord.');
+            showError('This Emoji Is Not Valid For Discord.');
             return;
         }
         fetch(`${backendUrl}/react`, {
@@ -193,7 +193,7 @@ document.body.addEventListener('click', e => {
 emojiPicker.addEventListener('emoji-click', event => {
     const emoji = event.detail.unicode;
     if(!discordEmojiRegex.test(emoji)){
-        alert('This Emoji Is Not Valid For Discord.');
+        showError('This Emoji Is Not Valid For Discord.');
         return;
     }
     const messageId = currentReactMessageId;
@@ -255,7 +255,7 @@ fileInput.addEventListener('change',()=>{
 });
 uploadForm.addEventListener('submit', e=>{
     e.preventDefault();
-    if(!fileInput.files.length) return alert('No File Selected');
+    if(!fileInput.files.length) return showError('No File Selected');
     const tempLi = renderTempMessage(fileInput.files[0].name, 'file');
     const formData = new FormData();
     formData.append('file', fileInput.files[0]);
@@ -265,7 +265,7 @@ uploadForm.addEventListener('submit', e=>{
         body:formData
     }).then(res=>{
         tempLi.remove();
-        if(!res.ok) res.text().then(text=>alert('Upload Failed:'+text));
+        if(!res.ok) res.text().then(text=>showError('Upload Failed:'+text));
         fileInput.value=''; fileLabel.textContent='Select A File';
     }).catch(err=>{ tempLi.remove(); console.error(err); });
 });

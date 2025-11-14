@@ -3,11 +3,6 @@ self.addEventListener("install", event => {
     	caches.open("app-cache").then(cache => {
       		return cache.addAll([
         		"/",
-				"/frame.js",
-				"/theme.js",
-				"/InfiniteGamers.html",
-				"/drypopup.js",
-				"/games.js",
         		"/index.html",
         		"/global.css", 
         		"/main.js",

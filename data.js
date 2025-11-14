@@ -53,7 +53,7 @@ function base64Decode(str) {
 }
 function generateBase64(url) {
     if (!url) {
-        alert("Please Enter A URL.");
+        showError("Please Enter A URL.");
         return '';
     }
     url = normalizeUrl(url);
@@ -64,7 +64,7 @@ function generateBase64(url) {
 }
 function generateAsciiEncodedHtml(url) {
     if (!url) {
-        alert("Please Enter A URL.");
+        showError("Please Enter A URL.");
         return '';
     }
     url = normalizeUrl(url);
@@ -80,7 +80,7 @@ async function generateDataUrl() {
     const statusEl = document.getElementById('status');
     if (!urlInput && preset) urlInput = preset;
     if (!urlInput) {
-        alert("Please Select Or Enter A URL.");
+        showError("Please Select Or Enter A URL.");
         return;
     }
     const check = await checkURLStatus(urlInput);
@@ -95,23 +95,19 @@ async function generateDataUrl() {
         }
         if (check.status === "cors-blocked") {
             document.getElementById('output').value = result;
-            statusEl.textContent = "Website Does Not Allow CORS So Link May Not Work";
-            statusEl.style.color = "yellow"
+            showError("Website Does Not Allow CORS So Link May Not Work");
         } else {
+            showSuccess("done");
             document.getElementById('output').value = result;
-            statusEl.textContent = "Success";
-            statusEl.style.color = "green"
         }
     }
     else if (check.status === "not-exist") {
-        statusEl.textContent = "ERR#15 Website Does Not Exist";
+        showError("ERR#15 Website Does Not Exist");
         document.getElementById('output').value = '';
-        statusEl.style.color = "red"
     }
     else if (check.status === "network-blocked") {
-        statusEl.textContent = "Website Blocked For Your Internet Or Website Does Not Exist";
+        showError("Website Blocked For Your Internet Or Website Does Not Exist");
         document.getElementById('output').value = '';
-        statusEl.style.color = "red";
     }
 }
 document.getElementById('presetSelect').addEventListener('change', () => {
@@ -130,10 +126,10 @@ document.getElementById('urlInput').addEventListener('keydown', e => {
 document.getElementById('copyBtn').addEventListener('click', () => {
     const output = document.getElementById('output').value;
     if (!output) {
-        alert("Nothing To Copy. Generate A URL First.");
+        showError("Nothing To Copy. Generate A URL First.");
         return;
     }
     navigator.clipboard.writeText(output)
-    .then(() => alert("Copied To Clipboard!"))
-    .catch(() => alert("ERR#14 Failed To Copy."));
+    .then(() => showSuccess("Copied To Clipboard!"))
+    .catch(() => showError("ERR#14 Failed To Copy."));
 });

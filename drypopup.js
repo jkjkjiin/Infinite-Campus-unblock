@@ -153,13 +153,13 @@ window.addEventListener('DOMContentLoaded', () => {
         savePanicBtn.addEventListener('click', () => {
             const url = panicUrlInput.value.trim();
             if (!panicKey || !url) {
-                alert('Please Set Both A Panic Key And URL');
+                showError('Please Set Both A Panic Key And URL');
                 return;
             }
             localStorage.setItem('panicKey', panicKey);
             localStorage.setItem('panicUrl', url);
             panicUrl = url;
-            alert(`Panic Key "${panicKey}" Saved → ${panicUrl}`);
+            showSuccess(`Panic Key "${panicKey}" Saved → ${panicUrl}`);
         });
     }
     if (clearPanicBtn) {
@@ -170,7 +170,7 @@ window.addEventListener('DOMContentLoaded', () => {
             panicUrl = '';
             panicKeyInput.value = '';
             panicUrlInput.value = '';
-            alert('Panic Settings Cleared');
+            showSuccess('Panic Settings Cleared');
         });
     }
     document.addEventListener('keydown', (e) => {
@@ -227,7 +227,7 @@ window.addEventListener('DOMContentLoaded', () => {
     const saveTitleBtn = document.getElementById('saveTitleBtn');
     const resetTitleBtn = document.getElementById('resetTitleBtn');
     function setTitle(newTitle) {
-        document.title = newTitle || 'Infinite Campus';
+        document.title = newTitle || `${c}`;
     }
     if (savedTitle) {
         setTitle(savedTitle);
@@ -238,13 +238,13 @@ window.addEventListener('DOMContentLoaded', () => {
             localStorage.setItem('pageTitle', newTitle);
             setTitle(newTitle);
         } else {
-            alert('Please Enter A Valid Title Before Saving.');
+            showError('Please Enter A Valid Title Before Saving.');
         }
     });
     resetTitleBtn.addEventListener('click', () => {
         localStorage.removeItem('pageTitle');
         titleInput.value = '';
-        setTitle('Infinite Campus');
+        setTitle(`${c}`);
     });
     const faviconInput = document.getElementById('faviconInput');
     const setFaviconBtn = document.getElementById('setFaviconBtn');
@@ -266,7 +266,7 @@ window.addEventListener('DOMContentLoaded', () => {
     setFaviconBtn.addEventListener('click', () => {
         const file = faviconInput.files[0];
         if (!file) {
-            alert('Please Select An Image File First.');
+            showError('Please Select An Image File First.');
             return;
         }
         const reader = new FileReader();

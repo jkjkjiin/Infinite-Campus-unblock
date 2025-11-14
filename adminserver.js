@@ -27,7 +27,7 @@ async function deleteFile(filename) {
         headers: NGROK_HEADERS
     });
     if (res.ok) fetchFiles();
-    else alert("Failed To Delete File");
+    else showError("Failed To Delete File");
 }
 function downloadFile(filename) {
     const link = document.createElement("a");
@@ -48,9 +48,10 @@ document.getElementById("lockdownBtn").addEventListener("click", async () => {
     });
     if (res.ok) {
         const state = await res.json();
-        alert("Lockdown Is Now " + (state.lockdown ? "ENABLED" : "DISABLED"));
+        showSuccess("Lockdown Is Now " + (state.lockdown ? "ENABLED" : "DISABLED"));
+        document.getElementById("lockdownBtn").textContent = `Lockdown ` + (state.lockdown ? "ON" : "OFF");
     } else {
-        alert("Failed To Toggle Lockdown");
+        showError("Failed To Toggle Lockdown");
     }
 });
 async function fetchLogs() {
@@ -79,6 +80,7 @@ async function fetchLogs() {
         uploadSection.appendChild(ul);
     } else {
         uploadSection.innerHTML += "<p>No Upload Logs</p>";
+        uploadSection.style.display = "none";
     }
     logsContainer.appendChild(uploadSection);
     const rateSection = document.createElement("div");
@@ -93,6 +95,7 @@ async function fetchLogs() {
         rateSection.appendChild(ul);
     } else {
         rateSection.innerHTML += "<p>No Rate Limit Logs</p>";
+        rateSection.style.display = "none";
     }
     logsContainer.appendChild(rateSection);
     const linksSection = document.createElement("div");
@@ -107,6 +110,7 @@ async function fetchLogs() {
         linksSection.appendChild(ul);
     } else {
         linksSection.innerHTML += "<p>No Active Links</p>";
+        linksSection.style.display = "none";
     }
     logsContainer.appendChild(linksSection);
 }

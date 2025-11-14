@@ -10,6 +10,6 @@ document.querySelectorAll('.vhtml').forEach(link => {
                 html.replace(/</g, '&lt;').replace(/>/g, '&gt;') +
             '</pre>');
         })
-        .catch(err => alert('Error: ' + err));
+        .catch(err => showError('Error: ' + err));
     });
 });
