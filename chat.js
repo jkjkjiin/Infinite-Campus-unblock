@@ -7,8 +7,8 @@ import {
 const channelList = document.getElementById("channels");
 const chatLog = document.getElementById("chatLog");
 const mentionNotif = document.getElementById("mentionNotif");
-const mentionToggle = document.getElementById("mentionToggle");
 const mentionToggleLabel = document.getElementById("mentionToggleLabel");
+const mentionToggle = document.getElementById("mentionToggle");
 const chatInput = document.getElementById("chatInput");
 const sendBtn = document.getElementById("sendBtn");
 const adminControls = document.getElementById("adminControls");
@@ -56,6 +56,7 @@ style.textContent = `
 .msg { margin: 6px 0; }
 .left { display:flex; align-items:center; gap:6px; }
 `;
+
 const typingIndicator = document.createElement("div");
 typingIndicator.id = "typingIndicator";
 typingIndicator.style.fontSize = "0.8em";
@@ -73,7 +74,7 @@ function showError(message) {
     errorDiv.textContent = message;
     Object.assign(errorDiv.style, {
         position: "fixed",
-        top: header ? `${header.offsetHeight + 10}px` : "10px",
+        top: "10px",
         left: "50%",
         transform: "translateX(-50%)",
         backgroundColor: "salmon",
@@ -110,32 +111,6 @@ function scrollToBottom(smooth = false) {
         }, 50);
     });
 }
-const clock = document.createElement("div");
-clock.id = "clock";
-clock.style.textAlign = "center";
-clock.style.marginTop = "-1%";
-const roleEl = document.getElementById("role");
-const header = document.getElementById("header");
-if (header && roleEl) {
-    header.style.position = "relative";
-    const roleRect = roleEl.getBoundingClientRect();
-    const headerRect = header.getBoundingClientRect();
-    const offsetTop = roleEl.offsetTop + roleEl.offsetHeight + 5;
-    header.appendChild(clock);
-}
-function updateClock() {
-    const now = new Date();
-    const hours = now.getHours();
-    const minutes = now.getMinutes();
-    const seconds = now.getSeconds();
-    const ampm = hours >= 12 ? 'PM' : 'AM';
-    const displayHour = hours % 12 || 12;
-    const displayMinute = minutes.toString().padStart(2, '0');
-    const displaySecond = seconds.toString().padStart(2, '0');
-    clock.textContent = `${displayHour}:${displayMinute}:${displaySecond} ${ampm}`;
-}
-updateClock();
-setInterval(updateClock, 100);
 async function muteUser(uid) {
     const muteRef = ref(db, `mutedUsers/${uid}`);
     const expireTime = Date.now() + 24 * 60 * 60 * 1000;
@@ -955,6 +930,7 @@ sendBtn.onclick = async () => {
     const channelName = currentPath.split("/")[1];
     remove(ref(db, `typing/${channelName}/${currentUser.uid}`));
 }
+
 };
 chatInput.addEventListener("input", () => {
     const mentions = chatInput.value.match(/@\w+/g);
@@ -1034,48 +1010,27 @@ chatInput.addEventListener("input", () => {
 chatInput.addEventListener("blur", () => {
     mentionHint.style.display = "none";
 });
-function setHeader(user, name) {
-    usernameSpan.textContent = name;
-    usernameSpan.style.color = currentColor;
-    emailSpan.textContent = user.email;
-    if (isOwner || user.email === "infinitecodehs@gmail.com") {
-        roleSpan.textContent = "Owner"; roleSpan.className = "role-owner";
-        roleSpan.style.color = "lime";
-    } else if(["nitrix118@gmail.com"].includes(user.email)) {
-        roleSpan.textContent = "Co-Owner"; roleSpan.className = "role-cOwner";
-        roleSpan.style.color = "lightblue";
-    } else if (["jonloomis2000@gmail.com", "cegmnops@icloud.com", "larrytrejo200@gmail.com", "2030kallison@johnstonschools.org", "carpenterlevi961@gmail.com"].includes(user.email)) {
-        roleSpan.textContent = "Admin"; roleSpan.className = "role-admin";
-        roleSpan.style.color = "blue";
-    } else if(user.email === "newsomr95@gmail.com") {
-        roleSpan.textContent = "Tester"; roleSpan.className = "role-test";
-        roleSpan.style.color = "darkgoldenrod";
-    } else {
-        roleSpan.textContent = "User"; roleSpan.className = "role-user";
-        roleSpan.style.color = "white";
-    }
-}
 onAuthStateChanged(auth, async user => {
     if (!user) { 
         showError("Not Logged In!"); 
         setTimeout(() => location.href = "login.html", 1000);
         return; 
     }
+        const adminSnap = await get(ref(db, `users/${user.uid}/profile/isAdmin`));
+
     currentUser = user;
     const ownerSnap = await get(ref(db, `users/${user.uid}/profile/isOwner`));
     isOwner = ownerSnap.exists() && ownerSnap.val() === true;
     if (user.email === "infinitecodehs@gmail.com") isOwner = true;
-    isAdmin = ["infinitecodehs@gmail.com", "nitrix118@gmail.com", "jonloomis2000@gmail.com",
-               "newsomr95@gmail.com", "cegmnops@icloud.com", "larrytrejo200@gmail.com", "2030kallison@johnstonschools.org", "carpenterlevi961@gmail.com"]
-               .includes(user.email);
+isAdmin = adminSnap.exists() ? adminSnap.val() : false;
+isOwner = ownerSnap.exists() ? ownerSnap.val() : false;
+
     adminControls.style.display = (isAdmin || isOwner) ? "block" : "none";
-    if (isAdmin && !isOwner) {
-        newChannelName.style.display = "none";
-        addChannelBtn.style.display = "none";
-    }
+newChannelName.style.display = (isAdmin || isOwner) ? "inline-block" : "none";
+addChannelBtn.style.display = (isAdmin || isOwner) ? "inline-block" : "none";
+
     await ensureDisplayName(user);
     await loadMentionSetting(user);
-    setHeader(user, currentName);
     startChannelListeners();
     await renderChannelsFromDB();
     if (currentPath && currentPath.includes("messages/Admin-Chat") && !(isAdmin || isOwner)) {
@@ -1091,6 +1046,39 @@ onAuthStateChanged(auth, async user => {
             openPrivateChat(storedUid, name);
         });
         localStorage.removeItem("openPrivateChatUid");
+    }
+    const nameSnap = await get(ref(db, `users/${user.uid}/profile/displayName`));
+    const displayName = nameSnap.exists() ? nameSnap.val() : user.email;
+    const nameColor = await get(ref(db, `users/${user.uid}/settings/color`));
+    const DNC = nameColor.exists() ? nameColor.val() : `#ffffff`;
+    // Load Role Information
+
+    isAdmin = adminSnap.exists() ? adminSnap.val() : false;
+    isOwner = ownerSnap.exists() ? ownerSnap.val() : false;
+
+    // Display role
+    roleSpan.textContent = isOwner ? "Owner" : (isAdmin ? "Admin" : "User");
+    roleSpan.style.color = isOwner ? "lime" : (isAdmin ? "lightblue" : "white");
+
+    // Display Username
+    usernameSpan.textContent = displayName;
+    usernameSpan.style.color = DNC;
+
+    // Load PFP index (0–10)
+    const pfpSnap = await get(ref(db, `users/${user.uid}/profile/pic`));
+    const pfpIndex = pfpSnap.exists() ? pfpSnap.val() : 0;
+
+    // Available pfps
+    const profilePics = [
+        "/pfps/1.jpeg","/pfps/2.jpeg","/pfps/3.jpeg","/pfps/4.jpeg",
+        "/pfps/5.jpeg","/pfps/6.jpeg","/pfps/7.jpeg","/pfps/8.jpeg",
+        "/pfps/9.jpeg","/pfps/f3.jpeg","/pfps/kaiden.png"
+    ];
+
+    // Sidebar PFP element
+    const sidebarPfp = document.getElementById("sidebarPfp");
+    if (sidebarPfp) {
+        sidebarPfp.src = profilePics[pfpIndex];
     }
 });
 addChannelBtn.onclick = async () => {
@@ -1117,7 +1105,7 @@ function showSuccess(message) {
     successDiv.textContent = message;
     Object.assign(successDiv.style, {
         position: "fixed",
-        top: header ? `${header.offsetHeight + 10}px` : "10px",
+        top: "10px",
         left: "50%",
         transform: "translateX(-50%)",
         backgroundColor: "seagreen",
