@@ -134,13 +134,12 @@
                 let minutes = Math.floor(seconds / 60);
                 let hours = Math.floor(minutes / 60);
                 let days = Math.floor(hours / 24);
-                let months = Math.floor(days / 30);
                 days = Math.floor(days % 30);
                 hours = hours % 24;
                 minutes = minutes % 60;
                 seconds = seconds % 60;
                 timerEl.textContent =
-                    `${months}m ${days}d ${hours}h ${minutes}m ${seconds}s Until 1 Year Anniversary`;
+                    `${days}d ${hours}h ${minutes}m ${seconds}s Until 1 Year Anniversary`;
             }
             setInterval(updateAnniversaryTimer, 1000);
             updateAnniversaryTimer();
