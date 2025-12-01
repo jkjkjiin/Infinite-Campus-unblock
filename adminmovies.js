@@ -44,9 +44,9 @@ async function loadApply() {
         div.className = "file-item";
         div.innerHTML = `
             <b>${f.file}</b> — ${f.humanSize}<br><br>
-            <button class="watch-btn" onclick="watchApply('${f.file}')">Watch</button>
-            <button class="delete-btn" onclick="deleteApply('${f.file}')">Delete</button>
-            <button class="accept-btn" onclick="acceptFile('${f.file}')">Accept</button>
+            <button class="button" onclick="watchApply('${f.file}')">Watch</button>
+            <button class="button" onclick="deleteApply('${f.file}')">Delete</button>
+            <button class="button" onclick="acceptFile('${f.file}')">Accept</button>
         `;
         box.appendChild(div);
     });
