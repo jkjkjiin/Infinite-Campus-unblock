@@ -5,17 +5,33 @@ const socket = io(BACKEND, {
 });
 socket.on("connect", () => console.log("Server Connected:", socket.id));
 socket.on("jobLog", data => appendLog(data.text));
-socket.on("jobProgress", data => appendLog(`${data.text}`));
-socket.on("jobError", data => appendLog("ERROR: " + data.message));
-socket.on("jobStarted", data => appendLog(`Accept Started: ${data.filename}`));
-socket.on("jobDone", data => appendLog(`✔ Accept Completed: ${data.finalName}`));
+socket.on("jobProgress", data => {
+    appendLog(`${data.text}`);
+    if (data.percent !== undefined) {
+        const bar = document.getElementById("acceptProgressBar");
+        const wrap = document.getElementById("acceptProgress");
+        wrap.style.display = "block";
+        bar.style.width = data.percent + "%";
+        bar.innerText = Math.floor(data.percent) + "%";
+    }
+});
+socket.on("jobError", data => {
+    appendLog("ERROR: " + data.message);
+    hideAcceptProgress();
+});
+socket.on("jobStarted", data => {
+    appendLog(`Accept Started: ${data.filename}`);
+    showAcceptProgress();
+});
+socket.on("jobDone", data => {
+    appendLog(`✔ Accept Completed: ${data.finalName}`);
+    hideAcceptProgress();
+});
 async function loadApply() {
     const box = document.getElementById("applyList");
     box.innerHTML = "Loading...";
     const res = await fetch(BACKEND + "/api/list_apply_x9a7b2", {
-        headers: { 
-            "ngrok-skip-browser-warning": "true"
-        }
+        headers: { "ngrok-skip-browser-warning": "true" }
     });
     const data = await res.json();
     if (!data.ok) {
@@ -69,6 +85,7 @@ function acceptFile(filename) {
     if (!newName) return;
     document.getElementById("logs").innerText = "";
     document.getElementById("watchPanel").style.display = "flex";
+    showAcceptProgress();
     appendLog("Accepting");
     socket.emit("acceptApplicant", {
         filename,
@@ -79,5 +96,16 @@ function appendLog(msg) {
     const logs = document.getElementById("logs");
     logs.innerText += msg + "\n";
     logs.scrollTop = logs.scrollHeight;
+}
+function showAcceptProgress() {
+    const wrap = document.getElementById("acceptProgress");
+    const bar = document.getElementById("acceptProgressBar");
+    wrap.style.display = "block";
+    bar.style.width = "0%";
+    bar.innerText = "0%";
+}
+function hideAcceptProgress() {
+    const wrap = document.getElementById("acceptProgress");
+    wrap.style.display = "none";
 }
 loadApply();
