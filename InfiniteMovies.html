@@ -1,0 +1,155 @@
+<html>
+    <head>
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-7SV03ZXJ9R">
+        </script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-7SV03ZXJ9R');
+        </script>
+        <title>
+            Infinite Campus
+        </title>
+        <link id="dynamic-favicon" rel="icon" type="image/png" href="/res/icon.png">
+        <link rel="stylesheet" href="global.css">
+        <meta name="keywords" content="Infinite campus,infinite campus,Infinite Campus,infinite Campus">
+        <meta name="description" content="Infinite Campus Is A International Buisiness And Has Good Devs">
+        <meta property="og:title" content="Infinite Campus">
+        <meta property="og:description" content="Infinite Campus Is An International Buisiness And Has Good Devs">
+        <meta property="og:url" content="https://www.infinitecampus.xyz">
+        <meta name="theme-color" content="#8cbe37">
+        <meta content="/res/icon.png" property="og:image">
+        <script src="main.js">
+        </script>
+        <script src="drypopup.js">
+        </script>
+        <script src="theme.js">
+        </script>
+        <style>
+            .section {
+                background: transparent;
+                padding: 20px;
+                margin-bottom: 25px;
+                border-radius: 12px;
+                color:white;
+                border:1px solid white;
+            }
+            .file-item {
+                padding: 12px;
+                background: #333;
+                margin: 8px 0;
+                border-radius: 10px;
+            }
+            .file-item button {
+                margin-right: 10px;
+            }
+            #progressContainer {
+                width: 100%;
+                background: #444;
+                border-radius: 8px;
+                margin-top: 10px;
+                height: 16px;
+                display: none;
+            }
+            #progressBar {
+                height: 100%;
+                width: 0%;
+                background: #4caf50;
+                border-radius: 8px;
+                transition: width 0.10s linear;
+            }
+            #watchPanel {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: #000;
+                display: none;
+                flex-direction: column;
+                align-items: center;
+                justify-content: flex-start;
+                padding-top: 20px;
+                z-index: 9999;
+            }
+            #backBtn {
+                position: absolute;
+                top: 20px;
+                left: 20px;
+                padding: 10px 15px;
+                background: #ff4444;
+                border-radius: 6px;
+                color: white;
+                font-weight: bold;
+                border: none;
+                cursor: pointer;
+            }
+            #watchVideo {
+                width: 95vw;
+                height: auto;
+                max-height: 85vh;
+                border-radius: 12px;
+                margin-top: 70px;
+                background: black;
+            }
+            #search {
+                width: 100%;
+                font-size: 16px;
+                margin-bottom: 10px;
+            } 
+        </style>
+    </head>
+    <body>
+        <br>
+        <br>
+        <br>
+        <br>
+        <center>
+            <h1 class="tptxt">
+                Movie Streaming Service
+            </h1>
+            <div class="section">
+                <h2>
+                    Submit A Movie
+                </h2>
+                <input style="display:none;" type="file" id="applyFile">
+                <label for="applyFile" type="file" class="custom-file-upload">
+                    Upload A File
+                </label>
+                <button class="button" onclick="uploadApply()">
+                    Upload
+                </button>
+                <div id="progressContainer">
+                    <div id="progressBar"></div>
+                </div>
+                <div id="upload-status">
+                </div>
+            </div>
+            <div class="section">
+                <h2>
+                    Available Movies
+                </h2>
+                <input class="button" id="search" placeholder="Search Movies" oninput="filterMovies()">
+                <button class="button" onclick="loadMovies()">
+                    Reload List
+                </button>
+                <div id="movies">
+                </div>
+            </div>
+            <div id="watchPanel">
+                <button class="button" id="backBtn" onclick="closeWatchPanel()">
+                    Back
+                </button>
+                <video id="watchVideo" controls>
+                </video>
+            </div>
+        </center>
+        <script src="movies.js">
+        </script>
+        <script src="frame.js">
+        </script>
+        <script src="popup.js">
+        </script>
+    </body>
+</html>
