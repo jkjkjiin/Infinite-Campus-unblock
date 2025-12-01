@@ -1,4 +1,4 @@
-import { auth, db } from "./firebase.js";
+import { auth, db } from "./chatfirebase.js";
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-auth.js";
 import { ref, get, set, remove, onValue } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-database.js";
 const privateChatsDiv = document.getElementById("privateChats");
@@ -34,22 +34,38 @@ const profilePics = [
     "/pfps/kaiden.png"
 ];
     onAuthStateChanged(auth, async (user) => {
-      if (!user) {
-        alert("You Must Be Logged In To View This Page.");
-        window.location.href = "index.html";
-        return;
-      }
-      const uid = user.uid;
-      const ownerRef = ref(db, `users/${uid}/profile/isOwner`);
-      const snapshot = await get(ownerRef);
-      if (!snapshot.exists() || snapshot.val() !== true) {
-        alert("Access Denied. You Are Not The Owner.");
-        window.location.href = "index.html";
-        return;
-      }
-      await loadUserList();
-      await loadPrivateChats();
-    });
+  if (!user) {
+    alert("You Must Be Logged In To View This Page.");
+    window.location.href = "chat.html";
+    return;
+  }
+  const uid = user.uid;
+  const ownerRef = ref(db, `users/${uid}/profile/isOwner`);
+  const coOwnerRef = ref(db, `users/${uid}/profile/isCoOwner`);
+  const ownerSnap = await get(ownerRef);
+  const coOwnerSnap = await get(coOwnerRef);
+  let isOwner = ownerSnap.exists() && ownerSnap.val() === true;
+  let isCoOwner = coOwnerSnap.exists() && coOwnerSnap.val() === true;
+  if (!isOwner && !isCoOwner) {
+    alert("Access Denied. You Are Not An Approved User.");
+    window.location.href = "chat.html";
+    return;
+  }
+  if (isCoOwner && !isOwner) {
+    userListDiv.style.display = "none";
+    userEditDiv.style.display = "none";
+    privateChatsDiv.style.display = "none";
+    chatView.style.display = "none";
+    sendAsSelect.style.display = "none";
+    sendAdminMessageBtn.style.display = "none";
+    adminMsgInput.style.display = "none";
+    deleteChatBtn.style.display = "none";
+    deleteTypingBtn.style.display = "inline-block";
+    return;
+  }
+  await loadUserList();
+  await loadPrivateChats();
+});
     async function loadPrivateChats() {
       privateChatsDiv.innerHTML = "Loading Messages";
       const privateRef = ref(db, "private");
@@ -91,12 +107,9 @@ const profilePics = [
         const messages = snapshot.val();
         chatMessages.innerHTML = "";
         const entries = Object.entries(messages).sort((a, b) => {
-          const aKey = a[0];
-          const bKey = b[0];
-          const aNum = Number(aKey);
-          const bNum = Number(bKey);
-          if (!isNaN(aNum) && !isNaN(bNum)) return aNum - bNum;
-          return aKey.localeCompare(bKey);
+            const aTime = a[1]?.timestamp || 0;
+            const bTime = b[1]?.timestamp || 0;
+            return aTime - bTime;
         });
         for (const [msgId, msgData] of entries) {
           const senderUid = msgData.sender || uid;
@@ -256,13 +269,99 @@ const profilePics = [
         sendAsSelect.value = selected;
       }
     }
+    const deleteTypingBtn = document.getElementById("deleteTypingBtn");
+    deleteTypingBtn.onclick = async () => {
+      if (!confirm("Delete Typing Users?")) return;
+      try {
+        await remove(ref(db, "typing"));
+        alert("Done");
+      } catch (err) {
+        alert("Failed To Delete: " + err.message);
+      }
+    };
     function editUser(uid, data) {
       currentUserEditUID = uid;
       userListDiv.style.display = "none";
       userEditDiv.style.display = "block";
       editTitle.textContent = `Editing User: ${uid}`;
       userDataTextarea.value = JSON.stringify(data, null, 2);
+      let delBtn = document.getElementById("deleteUserBtn");
+      if (delBtn) delBtn.remove();
+      delBtn = document.createElement("button");
+      delBtn.id = "deleteUserBtn";
+      delBtn.textContent = "Delete User";
+      delBtn.style.marginTop = "12px";
+      delBtn.style.background = "#7a0000";
+      delBtn.style.color = "white";
+      delBtn.style.padding = "8px";
+      delBtn.style.borderRadius = "6px";
+      delBtn.onclick = () => deleteEntireUser(uid);
+      userEditDiv.appendChild(delBtn);
     }
+    async function deleteEntireUser(uid) {
+      if (!confirm(`Delete User "${uid}" And All Their Data?\nThis Cannot Be Undone.`)) {
+      return;
+  }
+  try {
+    const privateRef = ref(db, "private");
+    const privateSnap = await get(privateRef);
+    if (privateSnap.exists()) {
+      const allPrivate = privateSnap.val();
+      for (const userA in allPrivate) {
+        for (const userB in allPrivate[userA]) {
+          if (userA === uid || userB === uid) {
+            await remove(ref(db, `private/${userA}/${userB}`));
+          }
+        }
+      }
+    }
+    await remove(ref(db, `metadata/${uid}/privateChats`));
+    const metadataSnap = await get(ref(db, "metadata"));
+    if (metadataSnap.exists()) {
+      const allMeta = metadataSnap.val();
+      for (const otherUID in allMeta) {
+        if (allMeta[otherUID]?.privateChats?.[uid]) {
+          await remove(ref(db, `metadata/${otherUID}/privateChats/${uid}`));
+        }
+      }
+    }
+    const privateRef2 = ref(db, "private");
+    const privateSnap2 = await get(privateRef2);
+    if (privateSnap2.exists()) {
+      const allPrivate2 = privateSnap2.val();
+      for (const userA in allPrivate2) {
+        for (const userB in allPrivate2[userA]) {
+          const chatPath = `private/${userA}/${userB}`;
+          const msgs = allPrivate2[userA][userB];
+          for (const msgId in msgs) {
+            if (msgs[msgId].sender === uid) {
+              await remove(ref(db, `${chatPath}/${msgId}`));
+            }
+          }
+        }
+      }
+    }
+    const messagesRef = ref(db, "messages");
+    const messagesSnap = await get(messagesRef);
+    if (messagesSnap.exists()) {
+      const allChannels = messagesSnap.val();
+      for (const channelName in allChannels) {
+        const channelMsgs = allChannels[channelName];
+        for (const msgId in channelMsgs) {
+          if (channelMsgs[msgId]?.sender === uid) {
+            await remove(ref(db, `messages/${channelName}/${msgId}`));
+          }
+        }
+      }
+    }
+    await remove(ref(db, `users/${uid}`));
+    alert(`User "${uid}" Deleted Successfully`);
+    loadUserList();
+    loadPrivateChats();
+  } catch (err) {
+    alert("User Delete Failed: " + err.message);
+  }
+}
     saveUserBtn.onclick = async () => {
       if (!currentUserEditUID) return;
       try {

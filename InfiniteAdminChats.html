@@ -3,7 +3,8 @@
         <title>
             Admin Panel
         </title>
-        <link rel="icon" type="image/png" href="/res/icon.png">
+        <link rel="icon" type="image/png" href="favicon.ico">
+        <link rel="stylesheet" href="globalchat.css">
         <style>
             html, body {
                 height: 100%;
@@ -211,6 +212,9 @@
             <h2>
                 Messages Mod View
             </h2>
+	    <button id="deleteTypingBtn" style="background:#7a1f1f;margin-top:10px;">
+                Delete Typing Data
+            </button>
             <div id="privateChats">
             </div>
             <div id="chatView" style="display:none;">
@@ -223,9 +227,7 @@
                         Send As:
                     </label>
                     <select id="sendAsSelect">
-                        <option value="jiEcu7wSifMalQxVupmQXRchA9k1">
-                            hacker41
-                        </option>
+                        <option value="jiEcu7wSifMalQxVupmQXRchA9k1">Hacker41</option>
                     </select>
                     <textarea id="adminMessageInput" placeholder="Type A Message To Send"></textarea>
                     <div style="display:flex;flex-direction:column; gap:8px;">
@@ -264,7 +266,7 @@
                 </div>
             </div>
         </div>
-        <script type="module" src="admin.js">
+        <script type="module" src="adminchat.js">
         </script>
     </body>
 </html>

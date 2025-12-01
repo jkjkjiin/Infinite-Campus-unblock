@@ -9,8 +9,8 @@ const errorEl = document.getElementById("error");
 const messageBtn = document.getElementById("messageUserBtn");
 const urlParams = new URLSearchParams(window.location.search);
 let username = decodeURIComponent(urlParams.get("user") || "").trim();
-if (username.toLowerCase() === "hacker41💎" || username.toLowerCase() === "hacker41 💎") {
-  username = "hacker41 💎";
+if (username.toLowerCase() === "Hacker41💎" || username.toLowerCase() === "hacker41 💎") {
+  username = "Hacker41 💎";
 }
 if (!username) {
   showError("No Username Specified In The URL. Example: ?user=Nitrix67");
