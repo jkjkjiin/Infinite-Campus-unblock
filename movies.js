@@ -1,5 +1,14 @@
 let BACKEND = `${a}`;
 let MOVIE_CACHE = [];
+document.getElementById("applyFile").addEventListener("change", () => {
+    const file = document.getElementById("applyFile").files[0];
+    const label = document.getElementById("selectedFileName");
+    if (file) {
+        label.innerText = "Selected: " + file.name;
+    } else {
+        label.innerText = "";
+    }
+});
 function uploadApply() {
     const file = document.getElementById("applyFile").files[0];
     if (!file) return alert("Choose A File");
@@ -10,14 +19,22 @@ function uploadApply() {
     xhr.open("POST", uploadURL);
     xhr.setRequestHeader("ngrok-skip-browser-warning", "true");
     xhr.upload.addEventListener("progress", e => {
-        if (e.lengthComputputable) {
+        if (e.lengthComputable) {
             const percent = Math.round((e.loaded / e.total) * 100);
-            document.getElementById("progressContainer").style.display = "block";
-            document.getElementById("progressBar").style.width = percent + "%";
+            const container = document.getElementById("progressContainer");
+            const bar = document.getElementById("progressBar");
+            container.style.display = "block";
+            bar.style.width = percent + "%";
+            bar.innerText = percent + "%";
         }
     });
     xhr.onload = () => {
-        const result = JSON.parse(xhr.responseText);
+        let result;
+        try { result = JSON.parse(xhr.responseText); }
+        catch (err) {
+            document.getElementById("upload-status").innerText = "Upload failed (bad response)";
+            return;
+        }
         if (!result.ok) {
             document.getElementById("upload-status").innerText =
                 "Upload Failed: " + result.message;
@@ -28,6 +45,7 @@ function uploadApply() {
         setTimeout(() => {
             document.getElementById("progressContainer").style.display = "none";
             document.getElementById("progressBar").style.width = "0%";
+            document.getElementById("progressBar").innerText = "";
         }, 800);
         loadMovies();
     };
