@@ -92,9 +92,18 @@ function acceptFile(filename) {
         targetName: newName
     });
 }
+let logCounter = 0;
 function appendLog(msg) {
+    logCounter++;
     const logs = document.getElementById("logs");
-    logs.innerText += msg + "\n";
+    const line = document.createElement("div");
+    line.textContent = msg;
+    if (logCounter % 4 === 0) {
+        line.style.color = "lime";
+    } else {
+        line.style.color = "white";
+    }
+    logs.appendChild(line);
     logs.scrollTop = logs.scrollHeight;
 }
 function showAcceptProgress() {
