@@ -17,7 +17,6 @@ function uploadApply() {
     formData.append("file", file);
     const xhr = new XMLHttpRequest();
     xhr.open("POST", uploadURL);
-    xhr.setRequestHeader("ngrok-skip-browser-warning", "true");
     xhr.upload.addEventListener("progress", e => {
         if (e.lengthComputable) {
             const percent = Math.round((e.loaded / e.total) * 100);
