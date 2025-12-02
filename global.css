@@ -804,6 +804,7 @@ emoji-picker {
     position: absolute;
     top: 50px;
     right: 590px;
+    border:1px solid white;
     display: none;
     flex-direction: column;
     border-radius: 8px;

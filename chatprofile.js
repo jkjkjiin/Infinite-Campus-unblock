@@ -9,7 +9,7 @@ const errorEl = document.getElementById("error");
 const messageBtn = document.getElementById("messageUserBtn");
 const urlParams = new URLSearchParams(window.location.search);
 let username = decodeURIComponent(urlParams.get("user") || "").trim();
-if (username.toLowerCase() === "Hacker41💎" || username.toLowerCase() === "hacker41 💎") {
+if (username === "Hacker41💎") {
   username = "Hacker41 💎";
 }
 if (!username) {
