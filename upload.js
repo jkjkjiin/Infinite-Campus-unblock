@@ -1,4 +1,4 @@
-const MAX_SIZE = 500 * 1024 * 1024;
+const MAX_SIZE = 100 * 1024 * 1024;
 const appDiv = document.getElementById("app");
 const params = new URLSearchParams(window.location.search);
 const fileParam = params.get("file");
@@ -83,7 +83,7 @@ if (fileParam) {
         if (!file) return;
         fileNameDisplay.textContent = "Selected File: " + file.name;
         if (file.size > MAX_SIZE) {
-            showError("File Too Large! Maximum Allowed Size Is 500 MB.");
+            showError("File Too Large! Maximum Allowed Size Is 100 MB.");
             input.value = "";
             return;
         }

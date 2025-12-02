@@ -1,4 +1,5 @@
 let BACKEND = `${a}`;
+let applyBK = `https://included-touched-joey.ngrok-free.app`;
 let MOVIE_CACHE = [];
 document.getElementById("applyFile").addEventListener("change", () => {
     const file = document.getElementById("applyFile").files[0];
@@ -12,7 +13,7 @@ document.getElementById("applyFile").addEventListener("change", () => {
 function uploadApply() {
     const file = document.getElementById("applyFile").files[0];
     if (!file) return alert("Choose A File");
-    const uploadURL = BACKEND + "/api/upload_apply_x9a7b2";
+    const uploadURL = applyBK + "/api/upload_apply_x9a7b2";
     const formData = new FormData();
     formData.append("file", file);
     const xhr = new XMLHttpRequest();
