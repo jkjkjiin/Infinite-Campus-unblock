@@ -1,6 +1,8 @@
 let BACKEND = `${a}`;
 let applyBK = `https://included-touched-joey.ngrok-free.app`;
 let MOVIE_CACHE = [];
+const currentfile = document.getElementById("currentFile");
+const section = document.getElementById("section");
 document.getElementById("applyFile").addEventListener("change", () => {
     const file = document.getElementById("applyFile").files[0];
     const label = document.getElementById("selectedFileName");
@@ -100,6 +102,9 @@ function openWatchPanel(name) {
     const panel = document.getElementById("watchPanel");
     const player = document.getElementById("watchVideo");
     const streamURL = BACKEND + "/movies/x9a7b2/" + name;
+    section.style.display = "none";
+    currentfile.textContent = `Currently Watching: ${name}`
+    currentfile.style.display = "block";
     player.src = streamURL;
     player.play();
     panel.style.display = "flex";
@@ -110,5 +115,37 @@ function closeWatchPanel() {
     player.pause();
     player.src = "";
     panel.style.display = "none";
+    currentfile.style.display = "none";
+    currentfile.textContent = "";
+    section.style.display = "block";
 }
+document.addEventListener("keydown", (e) => {
+    const video = document.getElementById("watchVideo");
+    const panel = document.getElementById("watchPanel");
+    if (panel.style.display !== "flex") return;
+    switch (e.key.toLowerCase()) {
+        case "f":
+            if (!document.fullscreenElement) {
+                video.requestFullscreen().catch(err => console.log(err));
+            } else {
+                document.exitFullscreen();
+            }
+            break;
+        case "m":
+            video.muted = !video.muted;
+            break;
+        case "arrowright":
+            video.currentTime += 5;
+            break;
+        case "arrowleft":
+            video.currentTime -= 5;
+            break;
+        case "arrowup":
+            video.volume = Math.min(1, video.volume + 0.05);
+            break;
+        case "arrowdown":
+            video.volume = Math.max(0, video.volume - 0.05);
+            break;
+    }
+});
 loadMovies();
