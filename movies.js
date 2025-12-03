@@ -149,3 +149,25 @@ document.addEventListener("keydown", (e) => {
     }
 });
 loadMovies();
+const networkWarning = document.getElementById("networkWarning");
+const SPEED_THRESHOLD_MS = 750;
+async function checkNetworkSpeed() {
+    const testURL = BACKEND + "/api/list_videos_x9a7b2";
+    const start = performance.now();
+    try {
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), 4000);
+        await fetch(testURL, { signal: controller.signal });
+        clearTimeout(timeout);
+        const duration = performance.now() - start;
+        if (duration > SPEED_THRESHOLD_MS) {
+            networkWarning.style.display = "block";
+        } else {
+            networkWarning.style.display = "none";
+        }
+    } catch (err) {
+        networkWarning.style.display = "block";
+    }
+}
+checkNetworkSpeed();
+setInterval(checkNetworkSpeed, 5000);
