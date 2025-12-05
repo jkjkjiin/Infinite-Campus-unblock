@@ -29,7 +29,6 @@ let currentName = "User";
 let currentColor = "#ffffff";
 let isAdmin = false;
 let isHAdmin = false;
-
 let isCoOwner = false;
 let isOwner = false;
 let currentPrivateUid = null;
@@ -580,7 +579,7 @@ async function renderMessageInstant(id, msg) {
                     badgeSpan.style.color = "lime";
                     badgeSpan.title = "Owner";
                 } else if (badgeText ==="⧨") {
-                    badgeSpan.style.color = "red";
+                    badgeSpan.style.color = "#00cc99";
                     badgeSpan.title = "Head Admin";
                 } else if (badgeText === "⛊") {
                     badgeSpan.style.color = "lightblue";
@@ -1193,7 +1192,7 @@ onAuthStateChanged(auth, async user => {
     isOwner = ownerSnap.exists() ? ownerSnap.val() : false;
     isHAdmin = hAdminSnap.exists() ? hAdminSnap.val() : false;
     roleSpan.textContent = isOwner ? "Owner" : (isAdmin ? "Admin" : (isCoOwner ? "Co-Owner" : (isHAdmin ? "Head Admin" : "User")));
-    roleSpan.style.color = isOwner ? "lime" : (isAdmin ? "dodgerblue" : (isCoOwner ? "lightblue" : (isHAdmin ? "red" : "white")));
+    roleSpan.style.color = isOwner ? "lime" : (isAdmin ? "dodgerblue" : (isCoOwner ? "lightblue" : (isHAdmin ? "#00cc99" : "white")));
     bioSpan.textContent = bioDisplay;
     bioSpan.style.color = "gray";
     bioSpan.style.fontSize = "60%";
