@@ -29,6 +29,7 @@ let currentName = "User";
 let currentColor = "#ffffff";
 let isAdmin = false;
 let isHAdmin = false;
+
 let isCoOwner = false;
 let isOwner = false;
 let currentPrivateUid = null;
