@@ -158,10 +158,9 @@ function detachCurrentMessageListeners() {
 async function ensureDisplayName(user) {
     const nameSnap = await get(ref(db, `users/${user.uid}/profile/displayName`));
     if (!nameSnap.exists()) {
-        const name = (user.email === "infinitecodehs@gmail.com") ? "hacker41 💎" : "User";
+        const name = (user.email === "infinitecodehs@gmail.com") ? "Hacker41 💎" : "User";
         await set(ref(db, `users/${user.uid}/profile/displayName`), name);
         currentName = name;
-        localStorage.setItem("displayName", name);
     } else {
         currentName = nameSnap.val();
         localStorage.setItem("displayName", currentName);
@@ -202,7 +201,9 @@ async function loadMentionSetting(user) {
 }
 async function getDisplayName(uid) {
     const snap = await get(ref(db, `users/${uid}/profile/displayName`));
-    return snap.exists() ? snap.val() : "User";
+    let dn = snap.exists() ? snap.val() : "User";
+    if (!dn || dn.trim() === "") dn = "Spam Account";
+    return dn;
 }
 mentionNotif.addEventListener("click", () => {
     const msgId = mentionNotif.dataset.msgid;
@@ -290,7 +291,8 @@ async function renderMessageInstant(id, msg) {
         "/pfps/8.jpeg",
         "/pfps/9.jpeg",
         "/pfps/f3.jpeg",
-        "/pfps/kaiden.png"
+        "/pfps/kaiden.png",
+        "/pfps/10.jpeg"
     ];
     leftWrapper.appendChild(profilePic);
     leftWrapper.appendChild(nameSpan);
@@ -451,7 +453,10 @@ async function renderMessageInstant(id, msg) {
                 get(ref(db, `users/${msg.sender}/profile/isOwner`)),
                 get(ref(db, `users/${msg.sender}/profile/isCoOwner`))
             ]);
-            const displayName = nameSnap.exists() ? nameSnap.val() : "User";
+            let displayName = nameSnap.exists() ? nameSnap.val() : "User";
+            if (!displayName || displayName.trim() === "") {
+                displayName = "Spam Account";
+            }
             const color = colorSnap.exists() ? colorSnap.val() : "#4fa3ff";
             let badgeText = null;
             const senderIsAdmin = adminSnap.exists() ? adminSnap.val() : false;
@@ -464,13 +469,13 @@ async function renderMessageInstant(id, msg) {
                 badgeText = badgeSnap.val();
             }
             const picVal = picSnap.exists() ? picSnap.val() : 0;
-            const picIndex = (picVal >= 0 && picVal <= 10) ? picVal : 0;
+            const picIndex = (picVal >= 0 && picVal <= 11) ? picVal : 0;
             profilePic.src = profilePics[picIndex];
             nameSpan.textContent = displayName;
             nameSpan.style.color = color;
             const openProfile = () => {
                 const cleanName = encodeURIComponent(displayName.replace(/ /g, ""));
-                window.location.href = `profile.html?user=${cleanName}`;
+                window.location.href = `profile.html?user=${msg.sender}`;
             };
             nameSpan.onclick = openProfile;
             profilePic.onclick = openProfile;
@@ -1167,7 +1172,10 @@ onAuthStateChanged(auth, async user => {
     const nameSnap = await get(ref(db, `users/${user.uid}/profile/displayName`));
     const bioSnap = await get(ref(db, `users/${user.uid}/profile/bio`));
     const bioDisplay = bioSnap.exists() ? bioSnap.val() : `Bio Not Set`;
-    const displayName = nameSnap.exists() ? nameSnap.val() : user.email;
+    let displayName = nameSnap.exists() ? nameSnap.val() : user.email;
+    if (!displayName || displayName.trim() === "") {
+        displayName = "Spam Account";
+    }
     const nameColor = await get(ref(db, `users/${user.uid}/settings/color`));
     const DNC = nameColor.exists() ? nameColor.val() : `#ffffff`;
     isAdmin = adminSnap.exists() ? adminSnap.val() : false;
@@ -1184,7 +1192,7 @@ onAuthStateChanged(auth, async user => {
     const profilePics = [
         "/pfps/1.jpeg","/pfps/2.jpeg","/pfps/3.jpeg","/pfps/4.jpeg",
         "/pfps/5.jpeg","/pfps/6.jpeg","/pfps/7.jpeg","/pfps/8.jpeg",
-        "/pfps/9.jpeg","/pfps/f3.jpeg","/pfps/kaiden.png"
+        "/pfps/9.jpeg","/pfps/f3.jpeg","/pfps/kaiden.png", "/pfps/10.jpeg"
     ];
     const sidebarPfp = document.getElementById("sidebarPfp");
     if (sidebarPfp) {

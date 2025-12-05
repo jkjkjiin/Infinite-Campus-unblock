@@ -16,6 +16,7 @@ const backToListBtn = document.getElementById("backToList");
 const sendAsSelect = document.getElementById("sendAsSelect");
 const adminMsgInput = document.getElementById("adminMessageInput");
 const sendAdminMessageBtn = document.getElementById("sendAdminMessage");
+const typingSection = document.getElementById("typingSection");
 let currentChatPath = null;
 let currentUserEditUID = null;
 let userProfiles = {};
@@ -31,12 +32,346 @@ const profilePics = [
     "/pfps/8.jpeg",
     "/pfps/9.jpeg",
     "/pfps/f3.jpeg",
-    "/pfps/kaiden.png"
+    "/pfps/kaiden.png",
+    "/pfps/10.jpeg"
 ];
-    onAuthStateChanged(auth, async (user) => {
+const deleteTypingBtn = document.getElementById("deleteTypingBtn");
+if (deleteTypingBtn) deleteTypingBtn.style.display = "none";
+let typingContainer;
+let typingListDiv;
+let unverifiedContainer;
+function createTypingAndUnverifiedUI() {
+  if (!typingSection) {
+    console.warn("Typing Element Not Found");
+    return;
+  }
+  typingSection.style.display = "flex";
+  typingSection.style.gap = "16px";
+  typingSection.style.alignItems = "flex-start";
+  typingContainer = document.createElement("div");
+  typingContainer.id = "typingContainer";
+  typingContainer.style.display = "flex";
+  typingContainer.style.flexDirection = "column";
+  typingContainer.style.minWidth = "320px";
+  if (deleteTypingBtn) {
+    deleteTypingBtn.style.display = "none";
+    deleteTypingBtn.style.marginBottom = "8px";
+    deleteTypingBtn.style.padding = "8px 10px";
+    deleteTypingBtn.style.borderRadius = "6px";
+    deleteTypingBtn.style.cursor = "pointer";
+    typingContainer.appendChild(deleteTypingBtn);
+  } else {
+    console.warn("Typing Btn Not Found");
+  }
+  typingListDiv = document.createElement("div");
+  typingListDiv.id = "typingListDiv";
+  typingListDiv.style.minHeight = "30px";
+  typingListDiv.style.fontSize = "14px";
+  typingListDiv.style.color = "#ddd";
+  typingListDiv.style.marginTop = "6px";
+  typingContainer.appendChild(typingListDiv);
+  unverifiedContainer = document.createElement("div");
+  unverifiedContainer.id = "unverifiedContainer";
+  unverifiedContainer.style.width = "420px";
+  unverifiedContainer.style.border = "1px solid rgba(255,255,255,0.06)";
+  unverifiedContainer.style.padding = "12px";
+  unverifiedContainer.style.borderRadius = "8px";
+  unverifiedContainer.style.background = "#0f0f0f";
+  unverifiedContainer.style.color = "#ddd";
+  const title = document.createElement("h3");
+  title.textContent = "Unverified Users";
+  title.style.margin = "0 0 8px 0";
+  title.style.fontSize = "16px";
+  unverifiedContainer.appendChild(title);
+  const viewer = document.createElement("div");
+  viewer.id = "unverifiedViewer";
+  unverifiedContainer.appendChild(viewer);
+  typingSection.appendChild(typingContainer);
+  typingSection.appendChild(unverifiedContainer);
+}
+createTypingAndUnverifiedUI();
+let unverifiedUsers = [];
+let unverifiedIndex = 0;
+let typingListenerUnsub = null;
+let usersListenerUnsub = null;
+async function updateTypingUI(typingSnapshot) {
+  if (!typingListDiv || !deleteTypingBtn) return;
+  const typingVal = typingSnapshot && typingSnapshot.exists() ? typingSnapshot.val() : null;
+  if (typingVal) {
+    deleteTypingBtn.style.display = "inline-block";
+  } else {
+    deleteTypingBtn.style.display = "none";
+  }
+  typingListDiv.innerHTML = "";
+  if (!typingVal) {
+    typingListDiv.textContent = "No Users Typing";
+    return;
+  }
+  const lines = [];
+  for (const channelName of Object.keys(typingVal)) {
+    const entry = typingVal[channelName];
+    if (!entry) continue;
+    for (const uid of Object.keys(entry)) {
+      if (!uid) continue;
+      const cached = userProfiles[uid]?.displayName;
+      if (cached) {
+        lines.push({ uid, displayName: cached, channelName });
+      } else {
+        try {
+          const pSnap = await get(ref(db, `users/${uid}/profile`));
+          const profile = pSnap.exists() ? pSnap.val() : {};
+          const displayName = profile.displayName || uid;
+          userProfiles[uid] = userProfiles[uid] || {};
+          userProfiles[uid].displayName = displayName;
+          userProfiles[uid].pic = profile.pic || "";
+          lines.push({ uid, displayName, channelName });
+        } catch (err) {
+          console.warn("Failed Fetch Profile For Typing Uid:", uid, err);
+          lines.push({ uid, displayName: uid, channelName });
+        }
+      }
+    }
+  }
+  if (lines.length === 0) {
+    typingListDiv.textContent = "No Users Typing";
+  } else {
+    lines.forEach(l => {
+      const p = document.createElement("div");
+      p.style.padding = "4px 0";
+      p.textContent = `${l.displayName} Is Typing In Channel ${l.channelName}`;
+      typingListDiv.appendChild(p);
+    });
+  }
+}
+function listenForTyping() {
+  const typingRef = ref(db, "typing");
+  if (typingListenerUnsub) {
+  }
+  onValue(typingRef, snapshot => {
+    updateTypingUI(snapshot);
+  }, (err) => {
+    console.error("Typing Listener Error:", err);
+  });
+}
+async function refreshUnverifiedUsers() {
+  const usersRef = ref(db, "users");
+  try {
+    const snap = await get(usersRef);
+    if (!snap.exists()) {
+      unverifiedUsers = [];
+      unverifiedIndex = 0;
+      renderUnverifiedViewer();
+      return;
+    }
+    const all = snap.val();
+    const list = [];
+    for (const [uid, uData] of Object.entries(all)) {
+      const verified = uData?.profile?.verified === true;
+      if (!verified) {
+        list.push({ uid, data: uData });
+      }
+    }
+    unverifiedUsers = list;
+    if (unverifiedIndex >= unverifiedUsers.length) unverifiedIndex = 0;
+    renderUnverifiedViewer();
+  } catch (err) {
+    console.error("Failed To Load Users For Unverified List:", err);
+    unverifiedUsers = [];
+    unverifiedIndex = 0;
+    renderUnverifiedViewer();
+  }
+}
+function showNextUnverified() {
+  if (!unverifiedUsers || unverifiedUsers.length === 0) return;
+  unverifiedIndex = (unverifiedIndex + 1) % unverifiedUsers.length;
+  renderUnverifiedViewer();
+}
+function renderUnverifiedViewer() {
+  const viewer = document.getElementById("unverifiedViewer");
+  viewer.innerHTML = "";
+  if (!unverifiedUsers || unverifiedUsers.length === 0) {
+    const none = document.createElement("div");
+    none.textContent = "No Unverified Users Found.";
+    viewer.appendChild(none);
+    return;
+  }
+  const current = unverifiedUsers[unverifiedIndex];
+  const uid = current.uid;
+  const data = current.data || {};
+  const profile = data.profile || {};
+  const settings = data.settings || {};
+  const header = document.createElement("div");
+  header.style.display = "flex";
+  header.style.alignItems = "center";
+  header.style.gap = "10px";
+  const picNum = parseInt(profile.pic);
+  const picSrc = (!isNaN(picNum) && picNum > 0 && picNum <= profilePics.length) ? profilePics[picNum] : (profile.pic || profilePics[0]);
+  const img = document.createElement("img");
+  img.src = picSrc;
+  img.width = 64;
+  img.height = 64;
+  img.style.borderRadius = "8px";
+  img.alt = "pic";
+  const titleBlock = document.createElement("div");
+  const displayNameToShow = profile.displayName || settings.displayName || uid;
+  const nameEl = document.createElement("div");
+  nameEl.textContent = displayNameToShow;
+  nameEl.style.fontWeight = "700";
+  nameEl.style.fontSize = "15px";
+  nameEl.style.color = settings.color;
+  const idEl = document.createElement("div");
+  idEl.textContent = `UID: ${uid}`;
+  idEl.style.fontSize = "12px";
+  idEl.style.opacity = "0.8";
+  titleBlock.appendChild(nameEl);
+  titleBlock.appendChild(idEl);
+  header.appendChild(img);
+  header.appendChild(titleBlock);
+  viewer.appendChild(header);
+  const fields = document.createElement("div");
+  fields.style.marginTop = "8px";
+  fields.style.fontSize = "13px";
+  fields.style.lineHeight = "1.4";
+  const bio = profile.bio || settings.bio || "(No Bio Set)";
+  const bioEl = document.createElement("div");
+  bioEl.textContent = `Bio: ${bio}`;
+  fields.appendChild(bioEl);
+  const color = settings.color || "(No Color Set)";
+  const colorEl = document.createElement("div");
+  colorEl.textContent = `Color: ${color}`;
+  fields.appendChild(colorEl);
+  const email = settings.userEmail || "(No Email Set)";
+  const emailEl = document.createElement("div");
+  emailEl.textContent = `Email: ${email}`;
+  fields.appendChild(emailEl);
+  const shownKeys = new Set(["displayName", "pic", "bio", "verified"]);
+  const shownSettings = new Set(["color", "userEmail", "displayName", "bio"]);
+  const otherEl = document.createElement("div");
+  otherEl.style.marginTop = "8px";
+  otherEl.textContent = "Other Settings";
+  otherEl.style.fontWeight = "600";
+  fields.appendChild(otherEl);
+  const otherList = document.createElement("div");
+  otherList.style.fontSize = "12px";
+  otherList.style.marginTop = "6px";
+  let foundOther = false;
+  for (const k of Object.keys(profile)) {
+    if (!shownKeys.has(k)) {
+      const item = document.createElement("div");
+      item.textContent = `profile/${k}: ${JSON.stringify(profile[k])}`;
+      otherList.appendChild(item);
+      foundOther = true;
+    }
+  }
+  for (const k of Object.keys(settings)) {
+    if (!shownSettings.has(k)) {
+      const item = document.createElement("div");
+      item.textContent = `settings/${k}: ${JSON.stringify(settings[k])}`;
+      otherList.appendChild(item);
+      foundOther = true;
+    }
+  }
+  if (!foundOther) {
+    const noOther = document.createElement("div");
+    noOther.textContent = "No Other Settings";
+    noOther.style.opacity = "0.8";
+    otherList.appendChild(noOther);
+  }
+  fields.appendChild(otherList);
+  viewer.appendChild(fields);
+  const btnArea = document.createElement("div");
+  btnArea.style.marginTop = "12px";
+  btnArea.style.display = "flex";
+  btnArea.style.gap = "8px";
+  btnArea.style.alignItems = "center";
+  const hasSettingsDisplayName = typeof settings.displayName === "string" && settings.displayName.trim() !== "";
+  const missingEmail = !settings.userEmail || settings.userEmail === "";
+  const verifyBtn = document.createElement("button");
+  verifyBtn.textContent = (hasSettingsDisplayName || missingEmail) ? "Verify" : "Verify";
+  verifyBtn.style.padding = "8px 10px";
+  verifyBtn.style.borderRadius = "6px";
+  verifyBtn.style.cursor = "pointer";
+  verifyBtn.onclick = async () => {
+    if (hasSettingsDisplayName || missingEmail) {
+      if (!confirm(`User ${displayNameToShow} Appears To Be A Spam Account Verify Anyway?`)) return;
+    }
+    try {
+      await set(ref(db, `users/${uid}/profile/verified`), true);
+      showSuccess("User Verified.");
+      unverifiedUsers.splice(unverifiedIndex, 1);
+      if (unverifiedIndex >= unverifiedUsers.length) unverifiedIndex = 0;
+      renderUnverifiedViewer();
+    } catch (err) {
+      showError("Failed To Verify User: " + err.message);
+    }
+  };
+  btnArea.appendChild(verifyBtn);
+  const deleteBtn = document.createElement("button");
+  deleteBtn.textContent = "Delete";
+  deleteBtn.style.padding = "8px 10px";
+  deleteBtn.style.borderRadius = "6px";
+  deleteBtn.style.background = "#7a0000";
+  deleteBtn.style.color = "white";
+  deleteBtn.style.cursor = "pointer";
+  deleteBtn.onclick = async () => {
+    if (!confirm(`Delete User "${uid}" And All Their Data?`)) return;
+    try {
+      await deleteEntireUser(uid);
+      unverifiedUsers.splice(unverifiedIndex, 1);
+      if (unverifiedIndex >= unverifiedUsers.length) unverifiedIndex = 0;
+      renderUnverifiedViewer();
+    } catch (err) {
+      showError("Failed To Delete User: " + err.message);
+    }
+  };
+  btnArea.appendChild(deleteBtn);
+  const nextBtn = document.createElement("button");
+  nextBtn.textContent = "Next";
+  nextBtn.style.padding = "8px 10px";
+  nextBtn.style.borderRadius = "6px";
+  nextBtn.style.cursor = "pointer";
+  nextBtn.onclick = showNextUnverified;
+  btnArea.appendChild(nextBtn);
+  if (hasSettingsDisplayName || missingEmail) {
+    const extraDelete = document.createElement("button");
+    extraDelete.textContent = "Delete User";
+    extraDelete.style.display = "block";
+    extraDelete.style.marginTop = "10px";
+    extraDelete.style.padding = "8px 10px";
+    extraDelete.style.borderRadius = "6px";
+    extraDelete.style.background = "#aa0000";
+    extraDelete.style.color = "white";
+    extraDelete.style.cursor = "pointer";
+    extraDelete.onclick = async () => {
+      if (!confirm(`Delete user "${uid}" And All Their Data?`)) return;
+      try {
+        await deleteEntireUser(uid);
+        unverifiedUsers.splice(unverifiedIndex, 1);
+        if (unverifiedIndex >= unverifiedUsers.length) unverifiedIndex = 0;
+        renderUnverifiedViewer();
+      } catch (err) {
+        showError("Delete Failed: " + err.message);
+      }
+    };
+    btnArea.appendChild(extraDelete);
+  }
+  viewer.appendChild(btnArea);
+}
+if (deleteTypingBtn) {
+  deleteTypingBtn.onclick = async () => {
+    if (!confirm("Delete Typing Users?")) return;
+    try {
+      await remove(ref(db, "typing"));
+      showSuccess("Done");
+    } catch (err) {
+      showError("Failed To Delete: " + err.message);
+    }
+  };
+}
+onAuthStateChanged(auth, async (user) => {
   if (!user) {
-    alert("You Must Be Logged In To View This Page.");
-    window.location.href = "chat.html";
+    showError("You Must Be Logged In To View This Page.");
+    window.location.href = "index.html";
     return;
   }
   const uid = user.uid;
@@ -47,8 +382,8 @@ const profilePics = [
   let isOwner = ownerSnap.exists() && ownerSnap.val() === true;
   let isCoOwner = coOwnerSnap.exists() && coOwnerSnap.val() === true;
   if (!isOwner && !isCoOwner) {
-    alert("Access Denied. You Are Not An Approved User.");
-    window.location.href = "chat.html";
+    showError("Access Denied. You Are Not An Approved User.");
+    window.location.href = "index.html";
     return;
   }
   if (isCoOwner && !isOwner) {
@@ -60,14 +395,22 @@ const profilePics = [
     sendAdminMessageBtn.style.display = "none";
     adminMsgInput.style.display = "none";
     deleteChatBtn.style.display = "none";
-    deleteTypingBtn.style.display = "inline-block";
+    listenForTyping();
     return;
   }
   await loadUserList();
   await loadPrivateChats();
+  listenForTyping();
+  await refreshUnverifiedUsers();
+  const usersRefRealtime = ref(db, "users");
+  onValue(usersRefRealtime, (snap) => {
+    refreshUnverifiedUsers();
+  }, (err) => {
+    console.warn("Realtime Watcher Failed:", err);
+  });
 });
-    async function loadPrivateChats() {
-      privateChatsDiv.innerHTML = "Loading Messages";
+async function loadPrivateChats() {
+    privateChatsDiv.innerHTML = "Loading Messages";
       const privateRef = ref(db, "private");
       const snapshot = await get(privateRef);
       if (!snapshot.exists()) {
@@ -172,7 +515,7 @@ const profilePics = [
             try {
               await remove(ref(db, `${currentChatPath}/${msgId}`));
             } catch (err) {
-              alert("Delete Failed: " + err.message);
+              showError("Delete Failed: " + err.message);
             }
           };
           content.appendChild(header);
@@ -194,7 +537,7 @@ const profilePics = [
         chatMessages.innerHTML = "<p>Error Loading Messages.</p>";
       });
     }
-    deleteChatBtn.onclick = async () => {
+     deleteChatBtn.onclick = async () => {
       if (!currentChatPath) return;
       if (!confirm("Delete this entire private chat and metadata?")) return;
       const parts = currentChatPath.split("/");
@@ -204,26 +547,48 @@ const profilePics = [
         await remove(ref(db, `private/${uid}/${secondUid}`));
         await remove(ref(db, `metadata/${uid}/privateChats/${secondUid}`));
         await remove(ref(db, `metadata/${secondUid}/privateChats/${uid}`));
-        alert("Chat And Metadata Deleted.");
+        showSuccess("Chat And Metadata Deleted.");
         chatView.style.display = "none";
         privateChatsDiv.style.display = "block";
         loadPrivateChats();
       } catch (err) {
-        alert("Error deleting chat: " + err.message);
+        showError("Error deleting chat: " + err.message);
       }
     };
-    backButton.onclick = () => {
+backButton.onclick = () => {
       chatView.style.display = "none";
       privateChatsDiv.style.display = "block";
     };
-    async function loadUserList() {
+async function loadUserList() {
       const usersRef = ref(db, "users");
       const snapshot = await get(usersRef);
       if (!snapshot.exists()) {
         userListDiv.innerHTML = "No Users Found.";
         return;
       }
-      const data = snapshot.val();
+function populateSendAsOptions() {
+      const selected = sendAsSelect.value;
+      sendAsSelect.innerHTML = '';
+      const adminOpt = document.createElement('option');
+      adminOpt.value = 'admin';
+      adminOpt.textContent = '⛨ Admin';
+      sendAsSelect.appendChild(adminOpt);
+      const uEntries = Object.entries(userProfiles).sort((a, b) => {
+        const aName = a[1].displayName.toLowerCase();
+        const bName = b[1].displayName.toLowerCase();
+        return aName.localeCompare(bName);
+      });
+      uEntries.forEach(([uid, info]) => {
+        const opt = document.createElement('option');
+        opt.value = uid;
+        opt.textContent = info.displayName || uid;
+        sendAsSelect.appendChild(opt);
+      });
+      if ([...sendAsSelect.options].some(o => o.value === selected)) {
+        sendAsSelect.value = selected;
+      }
+    }
+     const data = snapshot.val();
       userProfiles = {};
       const sorted = Object.entries(data).sort((a, b) => {
         const nameA = a[1]?.profile?.displayName?.toLowerCase() || "";
@@ -247,38 +612,6 @@ const profilePics = [
       });
       populateSendAsOptions();
     }
-    function populateSendAsOptions() {
-      const selected = sendAsSelect.value;
-      sendAsSelect.innerHTML = '';
-      const adminOpt = document.createElement('option');
-      adminOpt.value = 'admin';
-      adminOpt.textContent = '⛨ Admin';
-      sendAsSelect.appendChild(adminOpt);
-      const uEntries = Object.entries(userProfiles).sort((a, b) => {
-        const aName = a[1].displayName.toLowerCase();
-        const bName = b[1].displayName.toLowerCase();
-        return aName.localeCompare(bName);
-      });
-      uEntries.forEach(([uid, info]) => {
-        const opt = document.createElement('option');
-        opt.value = uid;
-        opt.textContent = info.displayName || uid;
-        sendAsSelect.appendChild(opt);
-      });
-      if ([...sendAsSelect.options].some(o => o.value === selected)) {
-        sendAsSelect.value = selected;
-      }
-    }
-    const deleteTypingBtn = document.getElementById("deleteTypingBtn");
-    deleteTypingBtn.onclick = async () => {
-      if (!confirm("Delete Typing Users?")) return;
-      try {
-        await remove(ref(db, "typing"));
-        alert("Done");
-      } catch (err) {
-        alert("Failed To Delete: " + err.message);
-      }
-    };
     function editUser(uid, data) {
       currentUserEditUID = uid;
       userListDiv.style.display = "none";
@@ -355,11 +688,11 @@ const profilePics = [
       }
     }
     await remove(ref(db, `users/${uid}`));
-    alert(`User "${uid}" Deleted Successfully`);
+    showSuccess(`User "${uid}" Deleted Successfully`);
     loadUserList();
     loadPrivateChats();
   } catch (err) {
-    alert("User Delete Failed: " + err.message);
+    showError("User Delete Failed: " + err.message);
   }
 }
     saveUserBtn.onclick = async () => {
@@ -367,12 +700,12 @@ const profilePics = [
       try {
         const newData = JSON.parse(userDataTextarea.value);
         await set(ref(db, `users/${currentUserEditUID}`), newData);
-        alert("User data saved!");
+        showSuccess("User data saved!");
         userEditDiv.style.display = "none";
         userListDiv.style.display = "block";
         loadUserList();
       } catch (err) {
-        alert("Invalid JSON Or Save Failed: " + err.message);
+        showError("Invalid JSON Or Save Failed: " + err.message);
       }
     };
     backToListBtn.onclick = () => {
@@ -381,7 +714,7 @@ const profilePics = [
     };
     sendAdminMessageBtn.onclick = async () => {
       if (!currentChatPath) {
-        alert("Open A Private Chat First.");
+        showError("Open A Private Chat First.");
         return;
       }
       const text = adminMsgInput.value.trim();
@@ -400,6 +733,64 @@ const profilePics = [
         await set(ref(db, `${currentChatPath}/${key}`), newMsg);
         adminMsgInput.value = "";
       } catch (err) {
-        alert("Send failed: " + err.message);
+        showError("Send failed: " + err.message);
       }
     };
+    let currentErrorDiv = null;
+    function showError(message) {
+    if (currentErrorDiv) currentErrorDiv.remove();
+    const errorDiv = document.createElement("div");
+    errorDiv.textContent = message;
+    Object.assign(errorDiv.style, {
+        position: "fixed",
+        top: "10px",
+        left: "50%",
+        transform: "translateX(-50%)",
+        backgroundColor: "salmon",
+        color: "black",
+        border: "2px solid red",
+        borderRadius: "8px",
+        padding: "10px 20px",
+        zIndex: 9999,
+        cursor: "pointer",
+        maxWidth: "90%",
+        textAlign: "center",
+        fontWeight: "bold",
+        boxShadow: "0 2px 8px rgba(0,0,0,0.3)"
+    });
+    errorDiv.addEventListener("click", () => {
+        errorDiv.remove();
+        currentErrorDiv = null;
+    });
+    document.body.appendChild(errorDiv);
+    currentErrorDiv = errorDiv;
+}
+let currentSuccessDiv = null;
+function showSuccess(message) {
+    if (currentSuccessDiv) currentSuccessDiv.remove();
+    const successDiv = document.createElement("div");
+    successDiv.textContent = message;
+    Object.assign(successDiv.style, {
+        position: "fixed",
+        top: "10px",
+        left: "50%",
+        transform: "translateX(-50%)",
+        backgroundColor: "seagreen",
+        color: "black",
+        border: "2px solid green",
+        borderRadius: "8px",
+        padding: "10px 20px",
+        zIndex: 9999,
+        cursor: "pointer",
+        maxWidth: "90%",
+        textAlign: "center",
+        fontWeight: "bold",
+        boxShadow: "0 2px 8px rgba(0,0,0,0.3)"
+    });
+    successDiv.addEventListener("click", () => {
+        successDiv.remove();
+        currentSuccessDiv = null;
+    });
+    document.body.appendChild(successDiv);
+    currentSuccessDiv = successDiv;
+}

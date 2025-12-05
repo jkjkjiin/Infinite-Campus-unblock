@@ -294,9 +294,10 @@ const profileImages = [
     "/pfps/8.jpeg",
     "/pfps/9.jpeg",
     "/pfps/f3.jpeg",
-    "/pfps/kaiden.png"
+    "/pfps/kaiden.png",
+    "/pfps/10.jpeg"
 ];
-const restrictedPics = [6, 7, 8];
+const restrictedPics = [6, 7, 8, 9];
 let currentPicIndex = 0;
 function updateProfilePicButton() {
     const img = profileImages[currentPicIndex];
