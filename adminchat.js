@@ -1,4 +1,4 @@
-import { auth, db } from "./chatfirebase.js";
+import { auth, db } from "./firebase.js";
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-auth.js";
 import { ref, get, set, remove, onValue } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-database.js";
 const privateChatsDiv = document.getElementById("privateChats");
@@ -409,6 +409,21 @@ onAuthStateChanged(auth, async (user) => {
     console.warn("Realtime Watcher Failed:", err);
   });
 });
+function populateSendAsOptions() {
+    if (!sendAsSelect) return;
+    sendAsSelect.innerHTML = "";
+    const adminOption = document.createElement("option");
+    adminOption.value = "admin";
+    adminOption.textContent = "⛨ Admin";
+    sendAsSelect.appendChild(adminOption);
+    for (const uid of Object.keys(userProfiles)) {
+        const profile = userProfiles[uid];
+        const opt = document.createElement("option");
+        opt.value = uid;
+        opt.textContent = profile.displayName || uid;
+        sendAsSelect.appendChild(opt);
+    }
+}
 async function loadPrivateChats() {
     privateChatsDiv.innerHTML = "Loading Messages";
       const privateRef = ref(db, "private");
