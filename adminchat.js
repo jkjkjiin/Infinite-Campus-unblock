@@ -73,7 +73,7 @@ async function logMutedUsers() {
             const expires = mutedData[uid]?.expires;
             desc.style.marginLeft = "35px";
             desc.style.marginTop = "-10px";
-            if (expires) {
+            if (expires != "Never") {
                 const readable = new Date(expires).toLocaleString();
                 desc.innerHTML = `<span style="font-size:0.7em;color:grey;">Email: ${emailVal}</span><p style="font-size:0.7em;color:grey;margin-top:-5px;">Expires At ${readable}</p>`;
             } else {

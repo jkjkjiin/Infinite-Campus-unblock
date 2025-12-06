@@ -303,17 +303,15 @@ async function renderMessageInstant(id, msg) {
     textDiv.style.marginLeft = "40px";
     textDiv.style.marginTop = "-15px";
     let safeText = (msg.text || "");
-safeText = safeText
-  .replace(/&/g, "&amp;")
-  .replace(/</g, "&lt;")
-  .replace(/>/g, "&gt;");
-
-safeText = safeText.replace(
-  /&lt;i class="([^"]*(?:fa|bi)[^"]+)"&gt;&lt;\/i&gt;/g,
-  '<i class="$1"></i>'
-);
-
-safeText = safeText.replace(/\n/g, "<br>");
+    safeText = safeText
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
+    safeText = safeText.replace(
+        /&lt;i class="([^"]*(?:fa|bi)[^"]+)"&gt;&lt;\/i&gt;/g,
+        '<i class="$1"></i>'
+    );
+    safeText = safeText.replace(/\n/g, "<br>");
     const mentionRegex = /@([^\s<]+)/g;
     safeText = safeText.replace(mentionRegex, (match, name) => {
         const isSelfMention = currentName && (currentName.toLowerCase() === name.toLowerCase() ||
@@ -512,6 +510,16 @@ safeText = safeText.replace(/\n/g, "<br>");
                         options.style.display = "flex";
                         options.style.flexDirection = "column";
                         options.style.marginTop = "4px";
+                        const muteToggle = document.createElement('div');
+                        muteToggle.textContent = "Toggle";
+                        muteToggle.style.cursor = "pointer";
+                        muteToggle.onclick = async () => {
+                            const muteRef = ref(db, `mutedUsers/${msg.sender}`);
+                            const expireTime = "Never";
+                            await set(muteRef, { expires: expireTime });
+                            showSuccess(`User Muted`);
+                            closeMenu();
+                        };
                         const muteMinutes = document.createElement("div");
                         muteMinutes.textContent = "Minutes";
                         muteMinutes.style.cursor = "pointer";
@@ -560,6 +568,7 @@ safeText = safeText.replace(/\n/g, "<br>");
                             }
                             closeMenu();
                         };
+                        options.appendChild(muteToggle);
                         options.appendChild(muteMinutes);
                         options.appendChild(muteHours);
                         options.appendChild(muteDays);
@@ -647,7 +656,7 @@ safeText = safeText.replace(/\n/g, "<br>");
                             if (e.key === "Enter" && !e.shiftKey) {
                                 e.preventDefault();
                                 const newText = textarea.value.trim();
-                                if (newText.length > 1000) {
+                                if (newText.length > 1000 && !(isCoOwner || isOwner || isHAdmin)) {
                                     showError(`Your Edited Message Is Too Long (${newText.length} Characters). Please Keep It Under 1000.`);
                                     textarea.value = "";
                                     return;
@@ -772,19 +781,17 @@ async function attachMessageListeners(msgRef) {
         if (el) {
             const textDiv = el.querySelector("div:nth-child(2)");
             const editedSpan = el.querySelector(".edited-label");
-            let safeText = (msg.text || "");
-safeText = safeText
-  .replace(/&/g, "&amp;")
-  .replace(/</g, "&lt;")
-  .replace(/>/g, "&gt;");
-
-safeText = safeText.replace(
-  /&lt;i class="([^"]*(?:fa|bi)[^"]+)"&gt;&lt;\/i&gt;/g,
-  '<i class="$1"></i>'
-);
-
-safeText = safeText.replace(/\n/g, "<br>");
-
+            const updatedMsg = snap.val();
+            let safeText = (updatedMsg.text || "");
+            safeText = safeText
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;");
+            safeText = safeText.replace(
+                /&lt;i class="([^"]*(?:fa|bi)[^"]+)"&gt;&lt;\/i&gt;/g,
+                '<i class="$1"></i>'
+            );
+            safeText = safeText.replace(/\n/g, "<br>");
             const mentionRegex = /@([^\s<]+)/g;
             safeText = safeText.replace(mentionRegex, (match, name) => {
                 const isSelfMention = currentName && (currentName.toLowerCase() === name.toLowerCase() ||
