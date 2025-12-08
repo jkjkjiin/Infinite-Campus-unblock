@@ -181,7 +181,6 @@ async function updateTypingUI(typingSnapshot) {
         if (!entry) continue;
         for (const uid of Object.keys(entry)) {
             if (!uid) continue;
-            const color = userSettings[uid]?.color;
             const cached = userProfiles[uid]?.displayName;
             if (cached) {
                 const profile = userProfiles[uid];
@@ -192,25 +191,26 @@ async function updateTypingUI(typingSnapshot) {
                 if (picNum > profilePics.length) {
                     picNum = 0;
                 }
+                const colorSnap = await get(ref(db, `users/${uid}/settings/color`));
+                const color = colorSnap.exists() ? colorSnap.val() : "white";
                 const picSrc = profilePics[picNum];
-                lines.push({ uid, displayName: cached, channelName, picSrc, color });
+                lines.push({ uid, displayName: cached, channelName, picSrc, color});
             } else {
                 try {
                     const pSnap = await get(ref(db, `users/${uid}/profile`));
-                    const sSnap = await get(ref(db, `users/${uid}/settings`));
+                    const colorSnap = await get(ref(db, `users/${uid}/settings/color`));
                     const profile = pSnap.exists() ? pSnap.val() : {};
-                    const settings = sSnap.exists() ? sSnap.val() : {};
+                    const color = colorSnap.exists() ? colorSnap.val() : "white";
                     const displayName = profile.displayName || uid;
                     const picNum = parseInt(profile.pic);
                     const picSrc = (!isNaN(picNum) && picNum > 0 && picNum <= profilePics.length) ? profilePics[picNum] : (profile.pic || profilePics[0]);
-                    const color = settings.color;
                     userProfiles[uid] = userProfiles[uid] || {};
                     userProfiles[uid].displayName = displayName;
                     userProfiles[uid].pic = profile.pic || "";
                     lines.push({ uid, displayName, channelName, picSrc, color});
                 } catch (err) {
                     console.warn("Failed Fetch Profile For Typing Uid:", uid, err);
-                    lines.push({ uid, picSrc, displayName: uid, channelName, color });
+                    lines.push({ uid, displayName, channelName, picSrc, color});
                 }
             }
         }
@@ -234,8 +234,7 @@ async function updateTypingUI(typingSnapshot) {
             typic.style.width = "30px";
             p.style.padding = "4px 0";
             p.style.marginLeft = "10px";
-            p.style.color = `${l.color}`;
-            p.textContent = `${l.displayName} Is Typing In ${l.channelName}`;
+            p.innerHTML = `<span style="color:${l.color};">${l.displayName}</span> Is Typing In #${l.channelName}`;
             typingListDiv.appendChild(mdiv);
             mdiv.appendChild(typic);
             mdiv.appendChild(p);
@@ -667,6 +666,11 @@ backButton.onclick = () => {
 async function loadUserList() {
       const usersRef = ref(db, "users");
       const snapshot = await get(usersRef);
+      const users = snapshot.val();
+      const keys = Object.keys(users);
+      const userCount = keys.length;
+      const userCountH = document.getElementById('userCount');
+      userCountH.textContent = `Users: ${userCount}`;
       if (!snapshot.exists()) {
         userListDiv.innerHTML = "No Users Found.";
         return;
