@@ -3,7 +3,7 @@ import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.6.0/fi
 import {
     ref, push, onChildAdded, onChildRemoved, onChildChanged,
     remove, update, set, get, runTransaction, onValue, off
-} from "https://www.gstatic.com/firebasejs/12.3.0/firebase-database.js";
+} from "https://www.gstatic.com/firebasejs/12.6.0/firebase-database.js";
 const channelList = document.getElementById("channels");
 const chatLog = document.getElementById("chatLog");
 let lastMessageTimestamp = 0;
