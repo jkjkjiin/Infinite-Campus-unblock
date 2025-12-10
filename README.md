@@ -4,3 +4,10 @@ With Your Favorite Games!
 
 
 To Read More About This Site, Go To The Site Navigation Page Under The About Section
+
+### Infinite Campus setup:
+```
+npm install
+npm run build
+node server.js
+```
