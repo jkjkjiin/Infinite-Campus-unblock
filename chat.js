@@ -1,5 +1,5 @@
 import { auth, db } from "./chatfirebase.js";
-import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-auth.js";
+import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-auth.js";
 import {
     ref, push, onChildAdded, onChildRemoved, onChildChanged,
     remove, update, set, get, runTransaction, onValue, off
