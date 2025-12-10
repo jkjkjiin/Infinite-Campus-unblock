@@ -1,5 +1,5 @@
 import { db, auth } from "./chatfirebase.js";
-import { ref, get } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-database.js";
+import { ref, get } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-database.js";
 const displayNameEl = document.getElementById("displayName");
 const bioEl = document.getElementById("bio");
 const uidEl = document.getElementById("uid");
