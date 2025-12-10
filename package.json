@@ -1,0 +1,14 @@
+{
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^5.1.0",
+    "http-proxy-middleware": "^3.0.5"
+  },
+  "scripts": {
+    "build": "echo \"No build step defined for this project.\"",
+    "start": "node server.js"
+  }
+}
