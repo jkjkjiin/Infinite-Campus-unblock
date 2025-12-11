@@ -11,3 +11,7 @@ npm install
 npm run build
 node server.js
 ```
+### Updating:
+```
+git pull --force --allow-unrelated-histories
+```
