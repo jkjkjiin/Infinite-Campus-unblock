@@ -1,0 +1,183 @@
+<html>
+    <head>
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-7SV03ZXJ9R">
+        </script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-7SV03ZXJ9R');
+        </script>
+        <title>
+            Dashboard
+        </title>
+        <link rel="icon" type="image/png" href="https://du11hjcvx0uqb.cloudfront.net/dist/images/favicon-e10d657a73.ico">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" defer>
+        </script>
+        <link rel="stylesheet" href="global.css">
+        <style>
+            label { 
+                font-weight: 600; 
+                display: block; 
+                margin: 12px 0 6px; 
+            }
+            input, select, textarea { 
+                padding: 10px 12px; 
+                border-radius: 10px; 
+                border: 1px solid #dcdfe6; 
+                font-size: 14px; 
+            }
+            textarea { 
+                width:90%;
+                min-height: 72px; 
+                resize: vertical; 
+            }
+            .row, .row-3 { 
+                display: grid; 
+                gap: 12px; 
+            }
+            .row { 
+                grid-template-columns: 1fr 1fr; 
+            }
+            .row-3 { 
+                grid-template-columns: 1fr 1fr 1fr; 
+            }
+            .controls { 
+                display: flex; 
+                align-items: center; 
+                gap: 10px; 
+                flex-wrap: wrap; 
+                margin-top: 12px; 
+            }
+            .btn.secondary { 
+                background: #e9ecf3; 
+                color: #111; 
+            }
+            .small { 
+                font-size: 12px; 
+                color: #444; 
+            }
+        </style>
+    </head>
+    <body>
+        <div class="wrap">
+            <div class="card">
+                <h1>
+                    QR Code Generator
+                </h1>
+                <label for="fnType">
+                    Function
+                </label>
+                <select id="fnType">
+                    <option value="text">
+                        URL / Text
+                    </option>
+                    <option value="wifi">
+                        WiFi
+                    </option>
+                    <option value="email">
+                        Email
+                    </option>
+                    <option value="phone">
+                        Phone
+                    </option>
+                    <option value="sms">
+                        SMS
+                    </option>
+                    <option value="geo">
+                        Location
+                    </option>
+                </select>
+                <div id="fields">
+                </div>
+                <div class="row" style="margin-top: 8px;">
+                    <div>
+                        <label for="qrSize">
+                            Size (px)
+                        </label>
+                        <input id="qrSize" type="number" min="128" max="2048" value="512"/>
+                    </div>
+                    <div>
+                        <label for="qrEC">
+                            Error Correction
+                        </label>
+                        <select id="qrEC">
+                            <option value="L">
+                                L (7%)
+                            </option>
+                            <option value="M" selected>
+                                M (15%)
+                            </option>
+                            <option value="Q">
+                                Q (25%)
+                            </option>
+                            <option value="H">
+                                H (30%)
+                            </option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row" style="margin-top: 8px;">
+                    <div>
+                        <label for="logoInput">
+                            Center Logo
+                        </label>
+                        <label for="logoInput" class="button">
+                            Upload Logo
+                        </label>
+                        <input style="display:none;" id="logoInput" type="file" accept="image/*" />
+                        <div class="controls">
+                            <div class="logo-preview">
+                                <img id="logoPreviewImg" alt="" style="max-width:100%;max-height:100%;display:none;" />
+                                <span id="logoEmpty" class="small">
+                                    Logo
+                                </span>
+                            </div>
+                            <div>
+                                <label for="logoScale">
+                                    Logo Size (%)
+                                </label>
+                                <input id="logoScale" type="number" min="8" max="40" value="22" />
+                                <label for="logoRadius">
+                                    Corner Radius (px)
+                                </label>
+                                <input id="logoRadius" type="number" min="0" max="80" value="16" />
+                                <label for="logoBorderSize">
+                                    Logo Border (px)
+                                </label>
+                                <input id="logoBorderSize" type="number" min="0" max="40" value="8" />
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <label for="moduleColor">
+                            Module Color
+                        </label>
+                        <input id="moduleColor" type="color" value="#000000" style="padding:3px;" />
+                        <label for="bgColor">
+                            Background
+                        </label>
+                        <input id="bgColor" type="color" value="#ffffff" style="padding:3px;" />
+                    </div>
+                </div>
+                <div class="controls">
+                    <button class="button" id="downloadBtn">
+                        Download PNG
+                    </button>
+                    <button class="button secondary" id="clearLogo">
+                        Remove Logo
+                    </button>
+                    <span id="status" class="small">
+                    </span>
+                </div>
+            </div>
+            <div class="card qr-stage">
+                <canvas id="qrPreview" width="420" height="420"></canvas>
+            </div>
+        </div>
+        <script src="frame.js">
+        </script>
+        <script src="qr.js">
+        </script>
+    </body>
+</html>
