@@ -1,0 +1,12 @@
+{
+  "name": "icserver",
+  "version": "1.1.0",
+  "description": "Running Infinite Campus Locally",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "license": "ISC",
+  "type": "module"
+}

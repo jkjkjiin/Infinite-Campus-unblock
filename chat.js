@@ -635,7 +635,7 @@ async function renderMessageInstant(id, msg) {
                 let canEdit = false;
                 if (isSelf) canEdit = true;
                 else if (isOwner || isTester) canEdit = true;
-                else if (isCoOwner && !senderIsOwner && !senderIsTester && !senderIsCoOwner) canEdit = true;
+                else if (isCoOwner && !senderIsOwner && !senderIsTester && !senderIsCoOwner && !senderIsHAdmin) canEdit = true;
                 if (canDelete) {
                     const delBtn = document.createElement("button");
                     delBtn.textContent = "Delete";
