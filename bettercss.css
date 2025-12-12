@@ -2,7 +2,7 @@ body {
     background-image:url('/res/bg.png');
 }
 header, footer {
-    display:flex;
+    display:inline-flex;
 }
 footer {
     justify-content:space-between;
@@ -20,5 +20,8 @@ header a, header a img {
 }
 #hbtns {
     height:inherit;
+    display:inherit;
+}
+#btns {
     display:inherit;
 }
