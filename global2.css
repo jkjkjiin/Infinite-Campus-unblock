@@ -1,0 +1,124 @@
+header { 
+    background:black;
+    color:yellow;
+    text-align:left;
+    position:fixed;
+    width:60px;
+    height:100%;
+    margin-top:50px;
+    border-right:1px solid grey;
+    z-index:999;
+}
+body {
+    margin:0px;
+}
+.headerbtn:active {
+    background:white;
+    color:black;
+    filter:none;
+}
+.headerbtn {
+    text-decoration:none;
+    background:transparent;
+    width:100%;
+    display:block;
+    padding-top:10px;
+    padding-bottom:10px;
+    text-align:center;
+    height:auto;
+    filter:
+        invert(100%)
+        sepia(100%)
+        saturate(1000%)
+        hue-rotate(2deg)
+        brightness(95%)
+        contrast(105%);
+}
+.button {
+    text-decoration:none;
+    padding:9px;
+    cursor:pointer;
+    background:black;
+    border:1px solid white;
+    border-radius:5px;
+    color:white;
+    font-size:70%;
+    transition:all 0.3s;
+}
+.button:hover {
+    background:white;
+    color:black;
+    border:1px solid black;
+}
+.dashboard {
+    height:20px;
+}
+.courses {
+    height:30px;
+}
+.active {
+    background:white !important;
+    color:black !important;
+    filter:none !important;
+}
+#gamesContainer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px; 
+    margin-left:70px;
+}
+.gamesbutton {
+    padding: 10px 15px;
+    font-size: 14px;
+    cursor: pointer;
+    border: 1px solid #333;
+    border-radius: 5px;
+    background: #f0f0f0;
+    white-space: nowrap;
+}
+.gamesbutton:hover {
+    background: #ddd;
+}
+center {
+    margin-left:70px;
+}
+input {
+    cursor:text !important;
+}
+#qrPreview { 
+    width: 100%; 
+    max-width: 420px; 
+    border:10px solid white;
+    background:white;
+    border-radius:20px;
+}
+.logo-preview { 
+    width: 48px; 
+    height: 48px; 
+    border-radius: 12px; 
+    background: #f0f2f7; 
+    display: inline-grid; 
+    place-items: center; 
+    overflow: hidden; 
+    border: 1px dashed #cbd2e1; 
+}
+.qr-stage { 
+    display: grid; 
+    place-items: center; 
+    background: transparent; 
+    border-radius: 18px; 
+    padding: 16px; 
+}
+.wrap { 
+    max-width: 1100px; 
+    margin: 0 auto; 
+    display: grid; 
+    grid-template-columns: 1.2fr 1fr; 
+    gap: 24px; 
+}
+.card { 
+    background: #fff; 
+    border-radius: 16px; 
+    padding: 16px; 
+    box-shadow: 0 8px 24px rgba(0,0,0,0.08); 
+}
