@@ -1,25 +1,23 @@
 const headerHTML = `
     <header id="site-header">
-        <div id="location">
-        </div>
-        <div id="weather-container">
+        <div id="weatherContainer">
             <div id="global-text">
                 <pre id="weather">
                 </pre>
             </div>
             <div id="global-text">
-                <button class="cfbtn" id="toggle">
+                <button id="toggle">
                     °C
                 </button>
             </div>
         </div>
         <a href="index.html">
-            <img class="logo" src="/res/logo.svg">
+            <img src="/res/logo.svg">
         </a>
-        <a class="headerbtn" style="right:710; top:14" href="InfiniteAbouts.html">
+        <a href="InfiniteAbouts.html">
             About
         </a>
-        <a class="headerbtn" style="right:650; top:14" href="InfiniteApps.html">
+        <a href="InfiniteApps.html">
             Apps
         </a>
         <div id="chatToggle" class="dropdown-toggle headerbtn" style="right:595; top:14;">
@@ -50,13 +48,13 @@ const headerHTML = `
                 Check Error Codes
             </button>
         </div>
-        <a class="headerbtn" style="right:400; top:14" href="InfiniteGamers.html">
+        <a href="InfiniteGamers.html">
             Games
         </a>
-        <a class="headerbtn" style="right:330; top:14" href="InfiniteCheaters.html">
+        <a href="InfiniteCheaters.html">
             Cheats
         </a>
-        <a class="headerbtn" style="right:250; top:14" href="InfiniteUpdaters.html">
+        <a href="InfiniteUpdaters.html">
             Updates
         </a>
         <div id="downloadToggle" class="dropdown-toggle headerbtn" style="right:120; top:14;">
@@ -74,7 +72,7 @@ const headerHTML = `
             Contact Me
         </a>
     </header>
-<footer id="site-footer" style="bottom:-4">
+<footer id="site-footer">
     <span style="margin-left:1%;">
         Totally Made By Noah White And Not A Different Person.
     </span>

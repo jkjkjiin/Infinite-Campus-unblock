@@ -8,3 +8,10 @@ footer {
     justify-content:space-between;
     padding:4px;
 }
+#weatherContainer {
+    display:flex;
+    align-self:center;
+}
+header a, header a img {
+    height:inherit;
+}
