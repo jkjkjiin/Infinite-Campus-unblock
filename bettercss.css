@@ -17,6 +17,7 @@ header {
 }
 header a, header a img {
     height:inherit;
+    display:inherit;
 }
 #hbtns {
     height:inherit;
