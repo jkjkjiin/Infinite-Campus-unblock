@@ -48,7 +48,7 @@ window.addEventListener('DOMContentLoaded', () => {
                 <hr>
                 <div class="section">
                     <br>
-                    <a class="test" href="InfiniteColors.html">Change Site Theme</a>
+                    <a class="test button darkbuttons rgb-element" href="InfiniteColors.html">Change Site Theme</a>
                     <a class="disabled" disabled>Take A Quick Survey</a>
                     <br><br>
                     <a href="InfiniteBypassers.html">Open In About:Blank</a>
@@ -60,7 +60,7 @@ window.addEventListener('DOMContentLoaded', () => {
                 <a class="discord" href="https://discord.gg/4d9hJSVXca">Join The Discord</a>
             </div>
             <div class="bar test rgb-element">
-                <a id="CTCbtn" href="InfiniteContacts.html">
+                <a id="CTCbtn" class="darkbuttons" href="InfiniteContacts.html">
                     Contact Me
                 </a>
             </div>

@@ -4,7 +4,7 @@ const headerHTML = `
             <div id="weatherContainer">
                 <div id="global-text">
                     <span id="weather"></span>
-                    <button id="toggle">°C</button>
+                    <button class="darkbuttons"id="toggle">°C</button>
                 </div>
             </div>
         </div>

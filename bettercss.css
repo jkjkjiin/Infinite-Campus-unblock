@@ -29,6 +29,7 @@ body {
 }
 #CTCbtn {
     color:black;
+    border:none !important;
 }
 .discord {
     display: block;
@@ -321,3 +322,15 @@ select {
             .m {
                 color:magenta;
             }
+            @keyframes rgbAnimation {
+    0% { background-color: red; }
+    33% { background-color: green; }
+    66% { background-color: blue; }
+    100% { background-color: red; }
+}
+.szo2 {
+    width:25%;
+}
+textarea.szo2 {
+    height:100px;
+}
