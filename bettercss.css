@@ -3,6 +3,7 @@ body {
 }
 header, footer {
     display:inline-flex;
+    width:100%;
 }
 footer {
     justify-content:space-between;
@@ -25,4 +26,7 @@ header a, header a img {
 }
 #btns {
     display:inherit;
+}
+.dropdown {
+    display:none;
 }

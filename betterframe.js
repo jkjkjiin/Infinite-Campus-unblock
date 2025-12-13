@@ -13,6 +13,7 @@ const headerHTML = `
             <a href="index.html">
                 <img src="/res/logo.svg">
             </a>
+            </div>
             <div id="hbtns">
             <a href="InfiniteAbouts.html">
                 About
@@ -72,8 +73,6 @@ const headerHTML = `
                 Contact Me
             </a>
             </div>
-            </div>
-
         </header>
         <footer id="site-footer">
             <span>
