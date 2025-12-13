@@ -16,7 +16,6 @@ body {
 }
 .discord {
     display: block;
-    margin-top: 15px;
     color:cyan;
 }
 .dropdown {
@@ -62,6 +61,7 @@ footer {
 }
 header {
     height:9vh;
+    position:fixed;
 }
 header, footer {
   width:100%;
@@ -94,6 +94,7 @@ hr {
     margin:auto;
     opacity:1;
     max-width:75%;
+    color:white;
 }
 #logo {
     height: 8vh;
@@ -227,4 +228,44 @@ select {
 }
 .weather-section {
     margin-top: 10px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.button {
+    color:white;
+    background:black;
+    border:1px solid white;
+    transition:0.3s all;
+    cursor:pointer;
+    text-decoration:none;
+    padding:5px;
+    border-radius:7px;
+}
+.button:hover {
+    filter:invert(1);
+}
+#clock {
+    color:white;
+}
+.y {
+    color:yellow;
+}
+.r {
+    color:red;
+}
+.hr2 {
+    max-width:50%;
 }

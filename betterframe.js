@@ -53,6 +53,9 @@ const headerHTML = `
             Pissing Off Your Teachers Since 2024
         </span>
     </footer>
+    <br>
+    <br>
+    <br>
 `;
 document.addEventListener("DOMContentLoaded", () => {
     const headerWrapper = document.createElement("div");
