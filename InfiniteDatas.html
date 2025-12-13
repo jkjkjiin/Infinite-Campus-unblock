@@ -1,5 +1,11 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
     <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.css">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-7SV03ZXJ9R">
         </script>
         <script>
@@ -11,8 +17,9 @@
         <title>
             Infinite Campus
         </title>
+        <link rel="manifest" href="/manifest.json">
         <link id="dynamic-favicon" rel="icon" type="image/png" href="/res/icon.png">
-        <link rel="stylesheet" href="global.css">
+        <link rel="stylesheet" href="bettercss.css">
         <meta name="keywords" content="Infinite campus,infinite campus,Infinite Campus,infinite Campus">
         <meta name="description" content="Infinite Campus Is A International Buisiness And Has Good Devs">
         <meta property="og:title" content="Infinite Campus">
@@ -22,26 +29,21 @@
         <meta content="/res/icon.png" property="og:image">
         <script src="main.js">
         </script>
-        <script src="drypopup.js">
+        <script src="betterdrypopup.js">
         </script>
         <script src="theme.js">
         </script>
     </head>
     <body>
         <center>
-            <br>
-            <br>
-            <br>
-            <br>
-            <h2 class="tptxt">
+            <h1 class="tptxt">
                 Data URL Generator
-            </h2>
+            </h1>
+            <hr>
             <br>
-            <br>
-            <label class="txt" for="typeSelect">
+            <label class="btxt" for="typeSelect">
                 Data URL Type:
             </label>
-            <br>
             <br>
             <select class="button" id="typeSelect">
                 <option value="image" selected>
@@ -52,11 +54,9 @@
                 </option>
             </select>
             <br>
-            <br>
-            <label class="txt" for="presetSelect">
+            <label class="btxt" for="presetSelect">
                 Preset URLs (Optional)
             </label>
-            <br>
             <br>
             <select class="button" id="presetSelect">
                 <option value="">
@@ -70,33 +70,24 @@
                 </option>
             </select>
             <br>
-            <br>
-            <label class="txt" for="urlInput">
+            <label class="btxt" for="urlInput">
                 Enter Custom URL
             </label>
             <br>
-            <br>
             <input class="button" type="text" id="urlInput" placeholder="Enter Custom URL Here" />
-            <br>
             <br>
             <button class="button" id="generateBtn">
                 Generate
             </button>
             <br>
-            <br>
-            <br>
             <p class="r">
                 WARNING: Site Themes, Login, And Most Save Data Will Not Work While On The Data URL
             </p>
-            <br>
-            <br>
-            <p id="status">
-            </p>
-            <label class="txt" for="output">
+            <label class="btxt" for="output">
                 URL:
             </label>
             <br>
-            <textarea style="background-color:black; color:white; height:20vh; width:90vw;" id="output" readonly placeholder="Generated Data URL Will Appear Here"></textarea>
+            <textarea style="width:75%; height:200px;" class="button" id="output" readonly placeholder="Generated Data URL Will Appear Here"></textarea>
             <br>
             <br>
             <button class="button" id="copyBtn">
@@ -105,15 +96,14 @@
             <br>
             <br>
             <br>
-            <br>
-            <br>
-            <br>
         </center>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js">
+        </script>
         <script src="popup.js">
         </script>
         <script src="data.js">
         </script>
-        <script src="frame.js">
+        <script src="betterframe.js">
         </script>
     </body>
 </html>

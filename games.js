@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("launchGames").onclick = function () {
-        document.body.innerHTML = "";
+        // document.body.innerHTML = "";
         setTimeout(function () {
             var games = [
             { name: "Slope", url: "https://mathadventure1.github.io/slope/slope/index.html" },
@@ -137,17 +137,20 @@ document.addEventListener("DOMContentLoaded", function () {
             { name: "Tomb Of The Mask", url: "https://mountain658.github.io/g/tombofthemask/index.html" } 
         ];
         var container = document.createElement("div");
+            const before = document.getElementById('before');
+            before.style.display = "none";
             container.setAttribute("id", "gamesContainer");
             document.body.appendChild(container);
+            container.style.padding = "30px";
             games.forEach(function (game) {
                 var button = document.createElement("button");
                 button.textContent = game.name;
-                button.className = "gamesbutton";
+                button.className = "button";
                 button.onclick = function () {
                     document.getElementById("gamesContainer").style.display = "none";
                     var backButton = document.createElement("button");
                     backButton.textContent = "← Back";
-                    backButton.className = "gamesbutton";
+                    backButton.className = "button";
                     backButton.style.position = "fixed";
                     backButton.style.top = "10px";
                     backButton.style.left = "10px";
@@ -156,14 +159,36 @@ document.addEventListener("DOMContentLoaded", function () {
                     backButton.style.fontSize = "16px";
                     backButton.style.cursor = "pointer";
                     backButton.setAttribute("id", "backButton");
-                    var iframe = document.createElement("object");
-                    iframe.setAttribute("type", "text/html");
-                    iframe.setAttribute("data", game.url);
+                    var fullscreen = document.createElement("button");
+                    fullscreen.textContent = "⛶";
+                    fullscreen.className = "button";
+                    fullscreen.style.position = "fixed";
+                    fullscreen.style.bottom = "10px";
+                    fullscreen.style.right = "10px";
+                    fullscreen.style.zIndex = "1000";
+                    fullscreen.style.padding = "10px";
+                    fullscreen.style.fontSize = "16px";
+                    fullscreen.style.cursor = "pointer";
+                    var iframe = document.createElement("iframe");
+                    iframe.src = game.url;
                     iframe.style.width = "100%";
-                    iframe.style.height = "100vh";
+                    iframe.style.height = "85vh";
+                    iframe.style.border = "none";
+                    iframe.setAttribute("allowfullscreen", "");
+                    iframe.setAttribute("referrerpolicy", "no-referrer");
                     iframe.setAttribute("id", game.name.replace(/ /g, "") + "Frame");
                     document.body.appendChild(backButton);
+                    document.body.appendChild(fullscreen);
                     document.body.appendChild(iframe);
+                    fullscreen.onclick = function () {
+                        if (!document.fullscreenElement) {
+                            iframe.requestFullscreen().catch(err => {
+                                console.error("Fullscreen failed:", err);
+                            });
+                        } else {
+                            document.exitFullscreen();
+                        }
+                    };
                     backButton.onclick = function () {
                         iframe.remove();
                         backButton.remove();

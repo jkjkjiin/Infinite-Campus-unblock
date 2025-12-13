@@ -7,9 +7,6 @@ function normalizeUrl(url) {
     return 'https://.' + url;
 }
 async function checkURLStatus(url) {
-    const statusEl = document.getElementById('status');
-    statusEl.textContent = "Verifying";
-    statusEl.style.color = "white";
     url = normalizeUrl(url);
     try {
         const response = await fetch(url, { method: 'HEAD' });
@@ -77,7 +74,6 @@ async function generateDataUrl() {
     let urlInput = document.getElementById('urlInput').value.trim();
     const preset = document.getElementById('presetSelect').value;
     const type = document.getElementById('typeSelect').value;
-    const statusEl = document.getElementById('status');
     if (!urlInput && preset) urlInput = preset;
     if (!urlInput) {
         showError("Please Select Or Enter A URL.");
@@ -85,8 +81,6 @@ async function generateDataUrl() {
     }
     const check = await checkURLStatus(urlInput);
     if (check.status === "cors-ok" || check.status === "cors-ok-but-error" || check.status === "cors-blocked") {
-        statusEl.textContent = "Generating...";
-        statusEl.style.color = "white";
         let result = '';
         if (type === 'image') {
             result = generateBase64(urlInput);
