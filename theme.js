@@ -121,10 +121,8 @@ window.addEventListener('DOMContentLoaded', () => {
                 bg = 'linear-gradient(to right, green, red)';
                 isDark = true;
             } else if (gradientSetting === 'rgb') {
-                if (header) insertRGBVideoBackground(header);
-                if (footer) insertRGBVideoBackground(footer);
                 bg = 'transparent';
-                isDark = false;
+                isDark = true;
                 document.querySelectorAll('.rgb-element').forEach(div => {
                     div.style.animation = 'rgbAnimation 30s infinite linear';
                 });
