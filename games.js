@@ -1,6 +1,5 @@
 document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("launchGames").onclick = function () {
-        // document.body.innerHTML = "";
         setTimeout(function () {
             var games = [
             { name: "Slope", url: "https://mathadventure1.github.io/slope/slope/index.html" },
@@ -192,6 +191,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     backButton.onclick = function () {
                         iframe.remove();
                         backButton.remove();
+                        fullscreen.remove();
                         document.getElementById("gamesContainer").style.display = "block";
                     };
                 };

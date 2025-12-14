@@ -402,11 +402,6 @@ select {
     padding: 10px 16px;
     gap: 12px;
 }
-#svideo {
-    width: 100%;
-    height: 100vh;
-    background: black;
-}
 .szo2 {
     width:25%;
 }
