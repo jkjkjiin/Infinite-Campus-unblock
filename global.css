@@ -554,6 +554,9 @@ th, td {
 .weather-section {
     margin-top: 10px;
 }
+::-webkit-scrollbar {
+    display:none;
+}
 .y {
     color:yellow;
 }
