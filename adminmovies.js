@@ -24,6 +24,7 @@ socket.on("jobStarted", data => {
     showAcceptProgress();
 });
 socket.on("jobDone", data => {
+    showSuccess(`File Accepted: ${data.finalName}`);
     appendLog(`✔ Accept Completed: ${data.finalName}`);
     hideAcceptProgress();
 });
@@ -53,14 +54,19 @@ async function loadApply() {
 }
 function watchApply(filename) {
     const url = BACKEND + "/apply_stream_x9a7b2/" + filename;
-    document.getElementById("videoPlayer").src = url;
-    document.getElementById("logs").innerText = "";
+    const vidplay = document.getElementById("videoPlayer");
+    document.getElementById("before").style.display = "none";
+    vidplay.src = url;
+    vidplay.style.height = "50vh";
+    vidplay.style.width = "min-content";
+    document.getElementById("logs").style.display = "none";
     document.getElementById("watchPanel").style.display = "flex";
 }
 function closeWatch() {
     document.getElementById("videoPlayer").pause();
     document.getElementById("videoPlayer").src = "";
     document.getElementById("watchPanel").style.display = "none";
+    document.getElementById("before").style.display = "block";
 }
 async function deleteApply(filename) {
     if (!confirm("Delete " + filename + "?")) return;
@@ -83,8 +89,12 @@ async function deleteApply(filename) {
 function acceptFile(filename) {
     const newName = prompt("Enter Name:", filename.replace(".mp4", ""));
     if (!newName) return;
-    document.getElementById("logs").innerText = "";
-    document.getElementById("watchPanel").style.display = "flex";
+    const lg = document.getElementById("logs");
+    document.getElementById("before").style.display = "none";
+    lg.innerText = "";
+    lg.style.height = "78vh";
+    lg.style.display = "block";
+    document.getElementById("watchPanel").style.display = "none";
     showAcceptProgress();
     appendLog("Accepting");
     socket.emit("acceptApplicant", {

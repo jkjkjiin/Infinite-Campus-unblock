@@ -105,8 +105,10 @@ function filterMovies() {
 function openWatchPanel(name) {
     const panel = document.getElementById("watchPanel");
     const player = document.getElementById("watchVideo");
+    const before = document.getElementById("before");
     const streamURL = BACKEND + "/movies/x9a7b2/" + name;
     section.style.display = "none";
+    before.style.display = "none";
     currentfile.textContent = `Currently Watching: ${name}`
     currentfile.style.display = "block";
     player.src = streamURL;

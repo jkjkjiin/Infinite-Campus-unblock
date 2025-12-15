@@ -29,11 +29,11 @@
         <meta content="/res/icon.png" property="og:image">
         <script src="main.js">
         </script>
-        <script src="drypopup.js">
-        </script>
         <script src="theme.js">
         </script>
         <script type="module" src="login.js">
+        </script>
+        <script src="https://cdn.socket.io/4.7.5/socket.io.min.js">
         </script>
     </head>
     <body>
@@ -41,30 +41,30 @@
             <h1 class="tptxt">
                 Accept Movie Applicants
             </h1>
-            <button class="button" onclick="loadApply()">
-                Reload List
-            </button>
-            <br>
-            <div id="applyList" style="color:white;">
+            <div id="before">
+                <button class="button" onclick="loadApply()">
+                    Reload List
+                </button>
+                <br>
+                <div id="applyList" style="color:white;">
+                </div>
             </div>
+            <div id="logs" style="display:none;">
+                </div>
+                <div id="acceptProgress" style="width: 100%; background: #333; padding: 6px; border-radius: 6px; margin: 10px 0; display: none;">
+                    <div id="acceptProgressBar" style="width: 0%; height: 20px; background: #4caf50; text-align: center; color: white; font-size: 12px; line-height: 20px; border-radius: 4px; transition: width 0.2s;">0%</div>
+                </div>
             <div id="watchPanel">
                 <button id="backBtn" class="button" onclick="closeWatch()">
                     Back
                 </button>
                 <video id="videoPlayer" controls>
                 </video>
-                <div id="logs">
-                </div>
-                <div id="acceptProgress" style="width: 100%; background: #333; padding: 6px; border-radius: 6px; margin: 10px 0; display: none;">
-                    <div id="acceptProgressBar" style="width: 0%; height: 20px; background: #4caf50; text-align: center; color: white; font-size: 12px; line-height: 20px; border-radius: 4px; transition: width 0.2s;">0%</div>
-                </div>
             </div>
         </center>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js">
         </script>
         <script src="adminmovies.js">
-        </script>
-        <script src="popup.js">
         </script>
         <script src="frame.js">
         </script>

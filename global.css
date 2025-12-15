@@ -531,6 +531,7 @@ th, td {
     margin-top: 70px;
 }
 #watchPanel {
+    margin-top:50px;
     position: fixed;
     top:0; 
     left:0;
