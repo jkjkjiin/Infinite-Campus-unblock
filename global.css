@@ -143,6 +143,10 @@ footer {
 .g {
     color:green;
 }
+#gamesContainer .button {
+    padding:10px;
+    margin:10px;
+}
 header {
     height:60px;
     position:fixed;
