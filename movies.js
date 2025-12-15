@@ -1,5 +1,5 @@
 let BACKEND = `${a}`;
-let applyBK = `https://included-touched-joey.ngrok-free.app`;
+let applyBK = `${a}`;
 let MOVIE_CACHE = [];
 const currentfile = document.getElementById("currentFile");
 const section = document.getElementById("section");
