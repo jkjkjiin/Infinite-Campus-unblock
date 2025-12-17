@@ -6,7 +6,7 @@ if (fileParam) {
     appDiv.innerHTML = `
         <center>
             <h2 class="tptxt">Download Your File</h2>
-            <p>${fileParam}</p>
+            <p class="btxt">${fileParam}</p>
             <div id="progressContainer" style="display:none; width:80%; background:#333; border-radius:4px; margin:10px auto;">
                 <div id="progressBar" style="width:0%; height:20px; background:#4caf50; border-radius:4px;"></div>
             </div>
@@ -68,7 +68,7 @@ if (fileParam) {
             <label for="fileInput" class="button">Choose File</label>
             <p id="fileName"></p>
             <div id="progressContainer" style="display:none; width:80%; background:#333; border-radius:4px; margin:10px auto;">
-                <div id="progressBar" style="width:0%; height:20px; background:#4caf50; border-radius:4px;"></div>
+            <div id="progressBar" style="width:0%; height:20px; background:#4caf50; border-radius:4px; color:#000; text-align:center; font-weight:bold;"></div>
             </div>
             <p id="output"></p>
         </center>
@@ -93,11 +93,16 @@ if (fileParam) {
         progressBar.style.width = "0%";
         const xhr = new XMLHttpRequest();
         xhr.open("POST", `${a}/uploadthis`, true);
+        let uploadStart = Date.now();
         xhr.upload.onprogress = (e) => {
-            if (e.lengthComputable) {
-                const percent = Math.round((e.loaded / e.total) * 100);
-                progressBar.style.width = percent + "%";
-            }
+            if (!e.lengthComputable) return;
+            const percent = Math.round((e.loaded / e.total) * 100);
+            const elapsed = (Date.now() - uploadStart) / 1000;
+            const speed = e.loaded / elapsed;
+            const remainingBytes = e.total - e.loaded;
+            const remainingSec = speed > 0 ? Math.round(remainingBytes / speed) : 0;
+            progressBar.style.width = percent + "%";
+            progressBar.textContent = `${percent}% — ${remainingSec}s left`;
         };
         xhr.onload = () => {
             if (xhr.status === 200) {
