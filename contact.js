@@ -1,4 +1,5 @@
 async function sendMessage() {
+    const channel = ( window.location.pathname == '/InfiniteContacts.html' ) ? '1389334335114580229' : '1334377158789042226';
     const nameInput = document.getElementById("name").value.trim();
     const name = nameInput ? nameInput : "Website User";
     const message = document.getElementById("message").value.trim();
@@ -15,7 +16,7 @@ async function sendMessage() {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
                 message: fullMessage,
-                channelId: "1334377158789042226"
+                channelId: channel
             })
         });
         if (response.ok) {
