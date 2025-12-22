@@ -1,11 +1,11 @@
 (function () {
     const inIframe = window.self !== window.top;
+    if (inIframe) return;
     let embeddedByDataURL = false;
     try {
-        const parentHref = window.top.location.href;
-        embeddedByDataURL = parentHref.startsWith("data:");
+        embeddedByDataURL = window.location.protocol === "data:";
     } catch {
-        embeddedByDataURL = true;
+        embeddedByDataURL = false;
     }
     if (!embeddedByDataURL) return;
     window.addEventListener("load", () => {
@@ -58,8 +58,8 @@ function runEmbeddedDataMode() {
         iframe.style.width = "100vw";
         iframe.style.height = "100vh";
         iframe.style.border = "none";
-        iframe.src = url;
-        win.document.title = `${c}`;
+        iframe.src = "https://www.infinitecampus.xyz";
+        win.document.title = `Infinite Campus`;
         win.document.body.style.margin = "0"; 
         win.document.body.style.overflow = "hidden"; 
         win.document.body.appendChild(iframe);
